@@ -1,26 +1,55 @@
 import React from 'react';
-import axios from 'axios';
 
-import logo from '../logo.svg';
 import '../style/App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section>
+        <div className="container-fluid">
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-4">
+                <div className="card text-center">
+                  <div className="title">
+                    <i className="fa fa-check-double" aria-hidden="true"></i>
+                  </div>
+                  <div className="price">
+                    <h4>Full</h4>
+                  </div>
+
+                  <a href="#"></a>
+                </div>
+              </div>
+              {/* <!-- END Col one --> */}
+              <div className="col-sm-4">
+                <div className="card text-center">
+                  <div className="title">
+                    <i className="fa fa-times" aria-hidden="true"></i>
+                  </div>
+                  <div className="price">
+                    <h4>No</h4>
+                  </div>
+                  <a href="#"></a>
+                </div>
+              </div>
+              {/* <!-- END Col two --> */}
+              <div className="col-sm-4">
+                <div className="card text-center">
+                  <div className="title">
+                    <i className="fa fa-couch" aria-hidden="true"></i>
+                  </div>
+                  <div className="price">
+                    <h4>Benched</h4>
+                  </div>
+                  <a href="#"></a>
+                </div>
+              </div>
+              {/* <!-- END Col three --> */}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
