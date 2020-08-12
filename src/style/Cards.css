@@ -129,19 +129,25 @@ font-size: 16px;
     text-decoration: none;
 }
 
-.card:hover a {
+.card:hover a,
+.card:active a,
+.card.key-pressed a {
     cursor: pointer;
     border: none;
     background-color: #fff;
 }
 
 /* Codepen nourabusoud */
-.card:active {
+.card:active,
+.card.key-pressed {
   transform: scale(0.9);
   box-shadow: 0 2px 25px rgba(255, 0, 130, 0.2);
 }
 
-.card:active .title .fa{
+.card:active .title .fa,
+.card.key-pressed .title .fa{
   color: #c7c7c7;
   transition: .5s ease-in-out;
 }
+
+
