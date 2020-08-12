@@ -1,6 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+
+import logo from '../logo.svg';
+import '../style/App.css';
 
 function App() {
   return (
