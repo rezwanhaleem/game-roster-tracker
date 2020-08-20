@@ -31,8 +31,6 @@ class Progress extends React.Component{
         document.removeEventListener("mouseup", this.handleMouseUp, false);
         document.removeEventListener("mousemove", this.handleMouseMove, false);
         let nearestPoint = Math.round(this.props.points*(this.state.progess/100));
-        let percent = Math.round((nearestPoint/this.props.points)*100);
-        this.setState({progess:percent});
         this.props.onPlayerSelect(nearestPoint);
     }
 
@@ -52,6 +50,13 @@ class Progress extends React.Component{
         let pos = x/this.state.bounds.len;
         return Math.round(pos*100);
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.visible !== prevProps.visible) {
+            let percent = Math.round((this.props.visible/this.props.points)*100);
+            this.setState({progess:percent});
+        }
+      }
 
     componentDidMount(){
         setTimeout(() => { 

@@ -16,7 +16,7 @@ section.Cards {
 }
 
 .Cards .container {
-  overflow: hidden;
+  overflow: visible;
   width: 100% !important;
   margin: 0;
   padding: 2em 1em;
