@@ -1,28 +1,36 @@
 import React from 'react';
-import axios from 'axios';
 
-import logo from '../logo.svg';
+import Progress from './Progress';
+import Carousel from './Carousel';
 import '../style/App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    players: [1,3,1,1,2],
+    previous: 0,
+    visible: 0
+  };
+
+  selectPlayer = (index) => {
+    if(index < this.state.players.length && index >= 0)
+      this.setState((state) => ({previous: state.visible,visible:index}));
+  }
+  
+  render() {
+    return (
+      <div className="App">
+        <div className="container">
+          <Progress points={this.state.players.length-1} visible={this.state.visible} onPlayerSelect={this.selectPlayer}/>
+          <Carousel 
+            previous={this.state.previous} 
+            visible={this.state.visible} 
+            players={this.state.players} 
+            onPlayerChange={this.selectPlayer}
+            />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
