@@ -5,15 +5,19 @@ import '../style/Carousel.css';
 
 class Carousel extends React.Component {
 
-    renderCards(){
-        return this.props.players.map((player, index)=>{
-            return <Cards key={index} visible={(this.props.visible===index)} player={player}/>;
+    renderCards() {
+        return this.props.players.map((player, index) => {
+            return <Cards key={index} visible={(this.props.visible === index)} player={player} />;
         });
     };
 
     render() {
-        return(
-            <section className="Carousel">
+        const currentPosition = {
+            transition: "transform " + (0.3*Math.abs(this.props.previous-this.props.visible)) + "s",
+            transform: "translateX(-" + (1*this.props.visible) +"00%)"
+        };
+        return (
+            <section className="Carousel" style={currentPosition}>
                 {this.renderCards()}
             </section>
         );

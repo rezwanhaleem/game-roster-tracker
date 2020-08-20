@@ -12,6 +12,7 @@ section.Cards {
           box-sizing: border-box;
           padding: 40px 0;
   margin: 0 auto;
+  flex: 1 0 100%;
 }
 
 .Cards .container {
