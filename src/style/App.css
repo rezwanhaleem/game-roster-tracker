@@ -40,3 +40,24 @@
     transform: rotate(360deg);
   }
 }
+
+.App .loadData {
+  border-radius: 50%;
+  margin: 1em auto;
+  padding: 1em;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  background-color: whitesmoke;
+  cursor: pointer;
+}
+
+.App .loadData i{
+  font-size: 1.2em;
+}
+
+.App .loadData:hover {
+  background-color: white;
+}
+
+.App .loadData:active {
+  background-color: whitesmoke;
+}

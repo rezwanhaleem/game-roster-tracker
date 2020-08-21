@@ -49,7 +49,26 @@ class Cards extends React.Component {
   }
 
   componentDidMount(){
-    this.handleClick(this.props.player);
+    this.handleClick(this.getSelection(this.props.player.mon));
+  }
+
+  getSelection(data){
+    let out;
+    switch(data) {
+      case 'Full':
+        out = 1;
+        break;
+      case 'NO':
+        out = 2;
+        break;
+      case 'Benched':
+        out = 3;
+        break;
+      default:
+        out = 2;
+        break;
+    } 
+    return out;
   }
 
   render() {

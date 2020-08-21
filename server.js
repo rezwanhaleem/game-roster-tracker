@@ -6,7 +6,7 @@ const express = require('express');
 const favicon = require('express-favicon');
 const path = require('path');
 const bodyParser = require('body-parser');//Parse JSON requests
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3001;
 const app = express();
 
 //------------------------GOOGLE-------------------------------
@@ -42,7 +42,7 @@ app.get('/ping', function (req, res) {
 });
 
 //------------------------Backend API-------------------------------
-app.get("/google-spreadsheet", async (req, res) => { try {
+app.get("/players", async (req, res) => { try {
     // Identifying which document we'll be accessing/reading from
   const doc = new GoogleSpreadsheet(spreadsheetId);
 
@@ -56,27 +56,48 @@ app.get("/google-spreadsheet", async (req, res) => { try {
   const sheet = doc.sheetsByIndex[0]; 
 
   // loads a range of cells
-  await sheet.loadCells('G3:G31'); 
+  await sheet.loadCells(['C3:C31', 'E3:E31', 'G3:G31', 'H3:H31', 'I3:I31']);
 
-  const cellG3 = sheet.getCellByA1('G3');
+  let players = [], 
+  columns = {
+    nameCol:'C',
+    discordCol:'E',
+    monCol:'G',
+    wedCol:'H',
+    friCol:'I'};
 
-  cellG3.value = 'NO';
+  let keys = Object.keys(columns);
 
-  const textFormat = cellG3.textFormat;
-  const horizontalAlignment =cellG3.horizontalAlignment;
+  let letter;
+  for (i = 3; i < 32; i++) {
+    let row = i.toString();
+    players.push({
+      'name': sheet.getCellByA1(columns.nameCol + row).value,
+      'discord':sheet.getCellByA1(columns.discordCol + row).value,
+      'mon':sheet.getCellByA1(columns.monCol + row).value,
+      'wed':sheet.getCellByA1(columns.wedCol + row).value,
+      'fri':sheet.getCellByA1(columns.friCol + row).value
+    });
+  } 
+  // const cellG3 = sheet.getCellByA1('G3');
 
-  //Workaround for reported issue #353 - Can't change cells backgroundColor if it's not clean 
-  cellG3.clearAllFormatting()
-  await cellG3.save();
+  // cellG3.value = 'NO';
 
-  cellG3.backgroundColor={ red:1 };
-  cellG3.textFormat = textFormat;
-  cellG3.horizontalAlignment = horizontalAlignment;
+  // const textFormat = cellG3.textFormat;
+  // const horizontalAlignment =cellG3.horizontalAlignment;
 
-  // save all updates in one call
-  await sheet.saveUpdatedCells(); 
+  // //Workaround for reported issue #353 - Can't change cells backgroundColor if it's not clean 
+  // cellG3.clearAllFormatting()
+  // await cellG3.save();
 
-  res.send('Success!')
+  // cellG3.backgroundColor={ red:1 };
+  // cellG3.textFormat = textFormat;
+  // cellG3.horizontalAlignment = horizontalAlignment;
+
+  // // save all updates in one call
+  // await sheet.saveUpdatedCells(); 
+
+  res.send(players);
 } catch (e) { console.log(e); } });
 //------------------------Backend API END-------------------------------
 
