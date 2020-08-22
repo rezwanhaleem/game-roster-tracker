@@ -7,7 +7,32 @@ import '../style/App.css';
 
 class App extends React.Component {
   state = {
-    players: [{mon:'Full'},{mon:'Benched'},{mon:'Full'},{mon:'Full'},{mon:'NO'}],
+    players: [
+      {
+        player: 'Rez',
+        discord: 'Trash',
+        mon:'Full'
+      },
+      {
+        player: 'Steven',
+        discord: 'SoftFluff',
+        mon:'Benched'
+      },
+      {
+        player: 'Quan',
+        discord: 'Twice',
+        mon:'Full'
+      },
+      {
+        player: 'Raymond',
+        discord: 'Momo',
+        mon:'Full'
+      },
+      {
+        player: 'Eric',
+        discord: 'Omo',
+        mon:'NO'
+      }],
     previous: 0,
     visible: 0
   };
@@ -29,7 +54,7 @@ class App extends React.Component {
           <div className="loadData" onClick={this.loadData}>
             <i className="fa fa-download" aria-hidden="true"></i>
           </div>
-          <Progress points={this.state.players.length-1} visible={this.state.visible} onPlayerSelect={this.selectPlayer}/>
+          <Progress players={this.state.players} points={this.state.players.length-1} visible={this.state.visible} onPlayerSelect={this.selectPlayer}/>
           <Carousel 
             previous={this.state.previous} 
             visible={this.state.visible} 

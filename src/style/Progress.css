@@ -74,21 +74,17 @@ p span {
   font-size: 1em;
   position: relative;
   height: 10em;
-  transition: 
-  	width 0.3s ease-in-out,
-  	transform 0.3s ease-in-out 0.4s;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out 0.4s;
   transform: rotateX(60deg) rotateY(0deg);
   transform-style: preserve-3d;
   width: 100%;
 }
 
 .bar.anim {
-	transform-style: flat;
-	transform: rotateX(0deg) rotateY(0deg);
-	width: 0%;
-	transition: 
-		width 0.3s ease-in-out,
-		transform 0.3s ease-in-out 0.4s;
+  transform-style: flat;
+  transform: rotateX(0deg) rotateY(0deg);
+  width: 0%;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out 0.4s;
 }
 
 .bar .face {
@@ -680,4 +676,13 @@ input[id="exercise-4"]:checked ~ .chart.grid .exercise .bar:nth-child(2) {
 }
 input[id="exercise-4"]:checked ~ .chart.grid .exercise .bar:nth-child(3) {
   flex: 1;
+}
+
+.point {
+  width: 0.5%;
+  position: absolute;
+  top: 0;
+  background-color: rgba(254, 254, 254, 0.4);
+  transition: all 0.3s ease-in-out;
+  height: 2em;
 }
