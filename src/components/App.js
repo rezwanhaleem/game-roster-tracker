@@ -1,41 +1,23 @@
 import React from 'react';
 import axios from 'axios';
 
+import Nav from './Nav';
 import Progress from './Progress';
 import Carousel from './Carousel';
+import DummyData from '../data/DummyData';
 import '../style/App.css';
 
 class App extends React.Component {
   state = {
-    players: [
-      {
-        player: 'Rez',
-        discord: 'Trash',
-        mon:'Full'
-      },
-      {
-        player: 'Steven',
-        discord: 'SoftFluff',
-        mon:'Benched'
-      },
-      {
-        player: 'Quan',
-        discord: 'Twice',
-        mon:'Full'
-      },
-      {
-        player: 'Raymond',
-        discord: 'Momo',
-        mon:'Full'
-      },
-      {
-        player: 'Eric',
-        discord: 'Omo',
-        mon:'NO'
-      }],
+    players: [],
     previous: 0,
     visible: 0
   };
+
+  constructor(props){
+    super(props);
+    this.state.players = DummyData;
+  }
 
   loadData = async () => {
     const res = await axios.get('/players');
@@ -43,17 +25,18 @@ class App extends React.Component {
   }
 
   selectPlayer = (index) => {
-    if(index < this.state.players.length && index >= 0)
+    if(index >= 0 && index < this.state.players.length)
       this.setState((state) => ({previous: state.visible,visible:index}));
   }
   
   render() {
     return (
       <div className="App">
+        <Nav />
         <div className="container">
-          <div className="loadData" onClick={this.loadData}>
+          {/* <div className="loadData" onClick={this.loadData}>
             <i className="fa fa-download" aria-hidden="true"></i>
-          </div>
+          </div> */}
           <Progress players={this.state.players} points={this.state.players.length-1} visible={this.state.visible} onPlayerSelect={this.selectPlayer}/>
           <Carousel 
             previous={this.state.previous} 
