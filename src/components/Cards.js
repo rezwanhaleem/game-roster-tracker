@@ -52,8 +52,23 @@ class Cards extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.handleClick(this.getSelection(this.props.player.mon));
+  getDay(){
+    let pick;
+    switch (this.props.daySetting) {
+      case 0:
+        pick = this.getSelection(this.props.player.mon);
+        break;
+      case 1:
+        pick = this.getSelection(this.props.player.wed);
+        break;
+      case 2:
+        pick = this.getSelection(this.props.player.fri);
+        break;
+      default:
+        pick = 2;
+        break;
+    }
+    return pick;
   }
 
   getSelection(data) {
@@ -73,6 +88,16 @@ class Cards extends React.Component {
         break;
     }
     return out;
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.daySetting !== prevProps.daySetting){
+      this.handleClick(this.getDay());
+    }
+  }
+
+  componentDidMount() {
+    this.handleClick(this.getDay());
   }
 
   render() {

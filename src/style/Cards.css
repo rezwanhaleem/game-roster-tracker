@@ -111,7 +111,7 @@ section.Cards {
   color: #fff;
   font-size: 16px;
 }
-.card a,
+.card a:not(.external),
 .card .checkbox {
   position: relative;
   z-index: 2;
@@ -131,14 +131,14 @@ section.Cards {
   background-color: transparent;
   border: 2px solid #fff;
 }
-.card a:hover {
+.card a:not(.external):hover {
   text-decoration: none;
 }
 
-.card:hover a,
-.card:active a,
-.card.key-pressed a,
-.card.selected a,
+.card:hover a:not(.external),
+.card:active a:not(.external),
+.card.key-pressed a:not(.external),
+.card.selected a:not(.external),
 .card:hover .checkbox,
 .card:active .checkbox,
 .card.key-pressed .checkbox,
