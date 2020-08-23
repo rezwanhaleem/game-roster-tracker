@@ -56,12 +56,13 @@ class Progress extends React.Component {
             let percent = Math.round((this.props.visible / this.props.points) * 100);
             this.setState({ progess: percent });
         }
-    }
 
-    componentDidMount() {
-        setTimeout(() => {
-            this.setState({ Animate: '' });
-        }, 2000);
+        if (this.props.page !== prevProps.page) {
+            const anim = this.props.page === 1? '': 'anim';
+            setTimeout(() => { 
+                this.setState({ Animate: anim });
+            }, 1000);
+        }
     }
 
     render() {

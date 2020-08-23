@@ -32,6 +32,10 @@
   width: 75%;
 }
 
+.App > .container {
+  overflow: hidden;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -50,7 +54,7 @@
   cursor: pointer;
 }
 
-.App .loadData i{
+.App .loadData i {
   font-size: 1.2em;
 }
 
@@ -60,4 +64,128 @@
 
 .App .loadData:active {
   background-color: whitesmoke;
+}
+
+.pages {
+  display: flex;
+  transition: transform 0.6s ease 0s;
+}
+
+.page {
+  width: 100%;
+  flex: 1 0 100%;
+}
+
+.start {
+  margin-top: 3em;
+  max-width: 80%;
+  background-image: url(/hero.png);
+  background-size: cover;
+  padding: 10% 0 0 0;
+  cursor: default;
+}
+
+.start:hover {
+  cursor: default;
+}
+
+.bg-overlay {
+  background: linear-gradient(-45deg, #5161ce, #5161ce);
+  padding: 0 20px 40px 20px;
+  position: relative;
+}
+
+.start:hover {
+  transform: none;
+}
+
+.start.card.text-center::before {
+  height: 40%;
+  bottom: -10%;
+}
+
+.page-1 {
+  /* padding: 1em; */
+}
+
+svg {
+  background-size: cover;
+  width: 100%;
+  display: block;
+}
+
+.bg-container {
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.start h4 {
+  font-size: 35px;
+}
+
+.settings {
+  display: flex;
+  margin: 1em 3em;
+}
+
+.settings .daySetting {
+  margin: 0;
+  flex: 1 0 75%;
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 40px;
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  border: 2px solid #fff;
+  display: flex;
+  overflow: hidden;
+}
+
+.settings .daySetting > div {
+  flex-grow: 1;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.settings .daySetting > div {
+  flex-grow: 1;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.settings .daySetting > div:hover,
+.settings .daySetting .selected {
+  background-color: #fff;
+  color: #282c34;
+}
+
+.auto-scroll {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 25%;
+}
+
+.auto-scroll > div {
+  cursor: pointer;
+  z-index: 2;
+}
+
+.settings i {
+  margin-right: 10px;
 }

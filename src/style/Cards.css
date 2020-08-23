@@ -18,7 +18,11 @@ section.Cards {
   overflow: visible;
   width: 100% !important;
   margin: 0;
-  padding: 2em 1em;
+  padding: 1em 1em;
+}
+
+.Cards > .container-fluid{
+  padding-bottom: 2em;
 }
 
 .card {

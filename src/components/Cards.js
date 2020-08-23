@@ -23,6 +23,10 @@ class Cards extends React.Component {
       default:
         break;
     }
+
+    if(this.props.autoScroll){
+      this.props.nextPlayer();
+    }
   }
 
   handleKeyDown = (e) => {

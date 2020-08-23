@@ -13,32 +13,44 @@ class Nav extends React.Component {
         activeWidth: 0
     };
 
-    handleClick = (e, tabId) => {
+    constructor(props) {
+        super(props);
+        this.tab = [React.createRef(),React.createRef(),React.createRef()];
+    }
+
+    handleClick = (tabId) => {
         switch (tabId) {
-            case 1:
+            case 0:
                 this.setState({ selected1: 'active', selected2: '', selected3: '' });
                 break;
-            case 2:
+            case 1:
                 this.setState({ selected1: '', selected2: 'active', selected3: '' });
                 break;
-            case 3:
+            case 2:
                 this.setState({ selected1: '', selected2: '', selected3: 'active' });
                 break;
             default:
                 break;
         }
 
-        let targ = e.currentTarget;
+        let targ = this.tab[tabId].current;
         this.setState({
             activeTop: targ.offsetTop,
             activeLeft: targ.offsetLeft,
             activeHeight: targ.offsetHeight + 1,
             activeWidth: targ.clientWidth
         });
+        this.props.onPageChange(tabId);
     }
 
-    init(e) {
-        e.click()
+    componentDidUpdate(prevProps) {
+        if (this.props.page !== prevProps.page) {
+            this.handleClick(this.props.page);
+        }
+    }
+
+    componentDidMount(){
+        this.handleClick(this.props.page);
     }
 
     render() {
@@ -50,18 +62,21 @@ class Nav extends React.Component {
         };
         return (
             <nav className="Nav navbar navbar-expand-lg navbar-mainbg">
-                <div className="navbar-brand navbar-logo" >Guild War Tracker</div>
+                <div className="navbar-brand navbar-logo" ><i className="fab fa-teamspeak"></i>Guild War Tracker</div>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav ml-auto">
                         <div className="hori-selector" style={horri}><div className="left"></div><div className="right"></div></div>
-                        <li ref={this.init} className={"nav-item " + this.state.selected1} onClick={(e) => this.handleClick(e, 1)}>
+                        <li ref={this.tab[0]} className={"nav-item " + this.state.selected1} onClick={(e) => this.handleClick(0)}>
                             <div className="nav-link" ><i className="fas fa-home"></i>Start</div>
                         </li>
-                        <li className={"nav-item " + this.state.selected2} onClick={(e) => this.handleClick(e, 2)}>
+                        <li ref={this.tab[1]} className={"nav-item " + this.state.selected2} onClick={(e) => this.handleClick(1)}>
                             <div className="nav-link" ><i className="fas fa-users"></i>Assign</div>
                         </li>
-                        <li className={"nav-item " + this.state.selected3} onClick={(e) => this.handleClick(e, 3)}>
+                        <li ref={this.tab[2]} className={"nav-item " + this.state.selected3} onClick={(e) => this.handleClick(2)}>
                             <div className="nav-link" ><i className="fas fa-file-upload"></i>Upload</div>
+                        </li>
+                        <li>
+                            <div className="nav-link" >Sign in with <i className="fab fa-google"></i></div>
                         </li>
                     </ul>
                 </div>

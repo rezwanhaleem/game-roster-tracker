@@ -32,7 +32,7 @@ header p {
   margin-bottom: 2em;
   padding: 0;
   height: auto !important;
-  padding: 40px 0 !important;
+  /* padding: 1em 0 !important; */
 }
 .Progress section:last-of-type {
   margin-bottom: 0;

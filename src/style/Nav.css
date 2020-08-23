@@ -2,6 +2,7 @@
 
 .Nav {
 	border-radius: 0px;
+	margin-bottom: 0;
 }
 
 .Nav *{
@@ -26,7 +27,7 @@
 }
 #navbarSupportedContent ul{
 	padding: 0px;
-	margin-right: 3em;
+	margin-right: 1em;
 	float: right;
 }
 #navbarSupportedContent ul li .nav-link i{
@@ -35,6 +36,7 @@
 #navbarSupportedContent li {
 	list-style-type: none;
 	float: left;
+	cursor: pointer;
 }
 #navbarSupportedContent ul li .nav-link{
 	color: rgba(255,255,255,0.5);
@@ -46,6 +48,11 @@
 	transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
 }
+
+#navbarSupportedContent ul li .nav-link:hover{
+	color: white;
+}
+
 #navbarSupportedContent>ul>li.active>.nav-link{
 	color: #5161ce;
 	background-color: transparent;
