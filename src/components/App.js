@@ -5,6 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Nav from './Nav';
 import Start from './Start';
+import End from './End';
 import Progress from './Progress';
 import Carousel from './Carousel';
 import DummyData from '../data/DummyData';
@@ -21,12 +22,35 @@ class App extends React.Component {
     daySetting: 1,
     day: ['Monday', 'Wednesday', 'Friday'],
     isReset: false,
-    loading: ''
+    loading: '',
+    currentAssignment: []
   };
 
   constructor(props) {
     super(props);
     this.state.players = DummyData;
+  }
+
+  updateCurrentAssignment(){
+    let assignment = [];
+    this.state.players.map((player) => {
+      switch (this.state.daySetting) {
+        case 0:
+          assignment.push(player.mon);
+          break;
+        case 1:
+          assignment.push(player.wed);
+          break;
+        case 2:
+          assignment.push(player.fri);
+          break;
+        default:
+          assignment.push('TBD');
+          break;
+      }
+      this.setState({currentAssignment:assignment});
+      return 0;
+    });
   }
 
   loadData = async () => {
@@ -51,7 +75,7 @@ class App extends React.Component {
   selectPlayer = (index) => {
     if (index >= 0 && index < this.state.players.length)
       this.setState((state) => ({ previous: state.visible, visible: index }));
-    else if(index >= this.state.players.length)
+    else if (index >= this.state.players.length)
       this.handlePageChange(2);
   }
 
@@ -65,13 +89,13 @@ class App extends React.Component {
 
   checkDaySettings() {
     if (this.state.player[0].mon === 'TBD') {
-      this.setState({ daySetting: 0 });
+      this.setState({ daySetting: 0 },this.updateCurrentAssignment);
     }
     else if (this.state.player[0].wed === 'TBD') {
-      this.setState({ daySetting: 1 });
+      this.setState({ daySetting: 1 },this.updateCurrentAssignment);
     }
     else if (this.state.player[0].fri === 'TBD') {
-      this.setState({ daySetting: 2 });
+      this.setState({ daySetting: 2 },this.updateCurrentAssignment);
     }
   }
 
@@ -107,7 +131,7 @@ class App extends React.Component {
               <div className='alert-container'>
                 <button className="checkbox"
                   onClick={() => {
-                    this.setState({ daySetting: day });
+                    this.setState({ daySetting: day },this.updateCurrentAssignment);
                     onClose();
                   }}>
                   Yes
@@ -131,7 +155,7 @@ class App extends React.Component {
             <div className='alert-container'>
               <button style={{ color: '#DB4437' }} className="checkbox"
                 onClick={() => {
-                  let temp = this.state.players;
+                  let temp = this.state.players.slice();
                   temp.map((player) => {
                     player.mon = "TBD";
                     player.wed = "TBD";
@@ -151,10 +175,25 @@ class App extends React.Component {
     });
   }
 
+  assignPlayer = (assignment,index) =>{
+    let tempAssign = this.state.currentAssignment.slice();
+
+    if(tempAssign.length === 0)
+      return;
+
+    tempAssign[index] = assignment;
+
+    this.setState({currentAssignment: tempAssign});
+  }
+
   componentDidUpdate(prevState) {
     if (this.state.player !== prevState.player) {
       this.checkDaySettings();
     }
+  }
+
+  componentDidMount(){
+    this.updateCurrentAssignment();
   }
 
   render() {
@@ -198,6 +237,14 @@ class App extends React.Component {
                 onPlayerChange={this.selectPlayer}
                 autoScroll={this.state.autoScroll}
                 isReset={this.state.isReset}
+                assignPlayer={this.assignPlayer}
+              />
+            </div>
+            <div className="page page-2">
+              <End
+                players={this.state.players}
+                daySetting={this.state.daySetting}
+                currentAssignment={this.state.currentAssignment}
               />
             </div>
           </div>

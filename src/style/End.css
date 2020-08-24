@@ -1,0 +1,22 @@
+.End {
+    background-color: #fff;
+    margin-top:3em;
+    border-radius: 15px;
+    padding: 1em;
+}
+
+.End .discord{
+    color: #7289da;
+}
+
+.End .assigned {
+    color: #39cb8c;
+}
+
+.End .discord i{
+    margin-right: 10px;
+}
+
+.End td{
+    text-align: left;
+}

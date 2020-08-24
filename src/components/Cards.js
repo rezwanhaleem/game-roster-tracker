@@ -24,7 +24,9 @@ class Cards extends React.Component {
         break;
     }
 
-    if(this.props.autoScroll){
+    this.props.assignPlayer(this.getAssignment(cardId),this.props.id);
+
+    if (this.props.autoScroll) {
       this.props.nextPlayer();
     }
   }
@@ -52,7 +54,7 @@ class Cards extends React.Component {
     }
   }
 
-  getDay(){
+  getDay() {
     let pick;
     switch (this.props.daySetting) {
       case 0:
@@ -90,8 +92,27 @@ class Cards extends React.Component {
     return out;
   }
 
-  componentDidUpdate(prevProps){
-    if((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)){
+  getAssignment(id) {
+    let out;
+    switch (id) {
+      case 1:
+        out = 'Full';
+        break;
+      case 2:
+        out = 'NO';
+        break;
+      case 3:
+        out = 'Benched';
+        break;
+      default:
+        out = 'TBD';
+        break;
+    }
+    return out;
+  }
+
+  componentDidUpdate(prevProps) {
+    if ((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)) {
       this.handleClick(this.getDay());
     }
   }
