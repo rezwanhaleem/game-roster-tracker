@@ -91,7 +91,7 @@ class Cards extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if(this.props.daySetting !== prevProps.daySetting){
+    if((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)){
       this.handleClick(this.getDay());
     }
   }

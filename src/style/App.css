@@ -110,19 +110,10 @@
   bottom: -10%;
 }
 
-.page-1 {
-  /* padding: 1em; */
-}
-
 svg {
   background-size: cover;
   width: 100%;
   display: block;
-}
-
-.bg-container {
-  /* display: flex;
-  flex-direction: column; */
 }
 
 .start h4 {
@@ -152,7 +143,7 @@ svg {
   cursor: pointer;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-color: transparent;
-  
+
   display: flex;
   overflow: hidden;
 }
@@ -164,7 +155,7 @@ svg {
   align-items: center;
   display: flex;
   border: 2px solid #fff;
-  transition: all 0.1s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
   user-select: none;
 }
 
@@ -190,12 +181,12 @@ svg {
   background-color: #fff;
 }
 
-.settings .daySetting > .reset:hover{
-  color: #DB4437;
+.settings .daySetting > .reset:hover {
+  color: #db4437;
 }
 
 .settings .daySetting > div:hover,
-.settings .daySetting .selected{
+.settings .daySetting .selected {
   color: #39cb8c;
 }
 
@@ -223,6 +214,69 @@ svg {
   margin: auto 0 auto 10px;
 }
 
-.external:hover{
+.external:hover {
   color: #75ffbc !important;
+}
+
+.alert-container {
+  display: flex;
+}
+
+.alert-container .checkbox {
+  margin: 0 1em;
+  background-color: rgb(255, 255, 255,0.4);
+}
+
+.alert-container .checkbox:hover {
+  background-color: #fff;
+  color: #5161ce;
+}
+
+.react-confirm-alert-overlay {
+  -ms-align-items: inherit;
+  align-items: inherit;
+}
+
+.react-confirm-alert {
+  margin-top: 5em;
+}
+
+.load-data,
+.next-page {
+  margin: 0 auto;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border: 2px solid #fff;
+  transition: all 0.3s ease-in-out 0s;
+  user-select: none;
+  border-radius: 15px;
+  line-height: 40px;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+
+.next-page {
+  border: none;
+  z-index: 5;
+  border-radius: 40px;
+  width: 125px;
+}
+
+.load-data i{
+  margin-right: 10px;
+}
+
+.next-page i{
+  margin-left: 10px;
+}
+
+.load-data:hover,
+.next-page:hover {
+  background-color: #fff;
+  color: #5161ce;
 }

@@ -32,7 +32,15 @@ class Carousel extends React.Component {
 
     renderCards() {
         return this.props.players.map((player, index) => {
-            return <Cards key={index} visible={(this.props.visible === index)} player={player} daySetting={this.props.daySetting} nextPlayer={this.nextPlayer} autoScroll={this.props.autoScroll}/>;
+            return <Cards 
+                key={index} 
+                visible={(this.props.visible === index)} 
+                player={player} 
+                daySetting={this.props.daySetting} 
+                nextPlayer={this.nextPlayer} 
+                autoScroll={this.props.autoScroll} 
+                isReset={this.props.isReset}
+            />;
         });
     };
 
