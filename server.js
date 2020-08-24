@@ -1,4 +1,6 @@
 //server.js
+const PLAYER_COUNT=31;
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -56,7 +58,7 @@ app.get("/players", async (req, res) => { try {
   const sheet = doc.sheetsByIndex[0]; 
 
   // loads a range of cells
-  await sheet.loadCells(['C3:C31', 'E3:E31', 'G3:G31', 'H3:H31', 'I3:I31']);
+  await sheet.loadCells(['C3:C'+PLAYER_COUNT, 'E3:E'+PLAYER_COUNT, 'G3:G'+PLAYER_COUNT, 'H3:H'+PLAYER_COUNT, 'I3:I'+PLAYER_COUNT]);
 
   let players = [], 
   columns = {

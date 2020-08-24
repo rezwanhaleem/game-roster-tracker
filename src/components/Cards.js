@@ -21,6 +21,7 @@ class Cards extends React.Component {
         this.setState({ selected1: '', selected2: '', selected3: 'selected' });
         break;
       default:
+        this.setState({ selected1: '', selected2: '', selected3: '' });
         break;
     }
 
@@ -67,7 +68,7 @@ class Cards extends React.Component {
         pick = this.getSelection(this.props.player.fri);
         break;
       default:
-        pick = 2;
+        pick = -1;
         break;
     }
     return pick;
@@ -86,7 +87,7 @@ class Cards extends React.Component {
         out = 3;
         break;
       default:
-        out = 2;
+        out = -1;
         break;
     }
     return out;

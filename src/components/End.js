@@ -9,7 +9,7 @@ class End extends React.Component {
             return (
                 <tr key={index}>
                     <th scope="row">{index}</th>
-                    <td>{player.player}</td>
+                    <td>{player.name}</td>
                     <td className="discord">{player.discord}</td>
                     <td>{}</td>
                     <td className={"" + (this.props.daySetting===0? "assigned":"")}>{this.props.daySetting===0? this.props.currentAssignment[index]:player.mon}</td>
@@ -27,7 +27,7 @@ class End extends React.Component {
                     <thead>
                         <tr>
                             <th scope="col"></th>
-                            <th scope="col">Name</th>
+                            <th scope="col"><i className="fas fa-user"></i>Name</th>
                             <th scope="col" className="discord"><i className="fab fa-discord"></i>Discord Tag</th>
                             <th scope="col"></th>
                             <th scope="col" className={"" + (this.props.daySetting===0? "assigned":"")}>Mon</th>

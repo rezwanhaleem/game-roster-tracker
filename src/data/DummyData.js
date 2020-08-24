@@ -1,34 +1,34 @@
 const DummyData = [
     {
-      player: 'Rez',
+      name: 'Rez',
       discord: 'Trash',
       mon:'Full',
       wed:'TBD',
       fri:'TBD'
     },
     {
-      player: 'Steven',
+      name: 'Steven',
       discord: 'SoftFluff',
       mon:'Benched',
       wed:'TBD',
       fri:'TBD'
     },
     {
-      player: 'Quan',
+      name: 'Quan',
       discord: 'Twice',
       mon:'Full',
       wed:'TBD',
       fri:'TBD'
     },
     {
-      player: 'Raymond',
+      name: 'Raymond',
       discord: 'Momo',
       mon:'Full',
       wed:'TBD',
       fri:'TBD'
     },
     {
-      player: 'Eric',
+      name: 'Eric',
       discord: 'Omo',
       mon:'NO',
       wed:'TBD',

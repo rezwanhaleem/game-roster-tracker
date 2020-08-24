@@ -26,12 +26,7 @@ class App extends React.Component {
     currentAssignment: []
   };
 
-  constructor(props) {
-    super(props);
-    this.state.players = DummyData;
-  }
-
-  updateCurrentAssignment(){
+  updateCurrentAssignment() {
     let assignment = [];
     this.state.players.map((player) => {
       switch (this.state.daySetting) {
@@ -48,7 +43,7 @@ class App extends React.Component {
           assignment.push('TBD');
           break;
       }
-      this.setState({currentAssignment:assignment});
+      this.setState({ currentAssignment: assignment });
       return 0;
     });
   }
@@ -89,13 +84,13 @@ class App extends React.Component {
 
   checkDaySettings() {
     if (this.state.player[0].mon === 'TBD') {
-      this.setState({ daySetting: 0 },this.updateCurrentAssignment);
+      this.setState({ daySetting: 0 }, this.updateCurrentAssignment);
     }
     else if (this.state.player[0].wed === 'TBD') {
-      this.setState({ daySetting: 1 },this.updateCurrentAssignment);
+      this.setState({ daySetting: 1 }, this.updateCurrentAssignment);
     }
     else if (this.state.player[0].fri === 'TBD') {
-      this.setState({ daySetting: 2 },this.updateCurrentAssignment);
+      this.setState({ daySetting: 2 }, this.updateCurrentAssignment);
     }
   }
 
@@ -127,16 +122,24 @@ class App extends React.Component {
           return (
             <div className='custom-ui'>
               <h1>Are you sure?</h1>
-              <p>You want to edit {this.state.day[day]}?</p>
+              <p>You want to edit {this.state.day[day]}? You have unsaved changes!</p>
               <div className='alert-container'>
                 <button className="checkbox"
                   onClick={() => {
-                    this.setState({ daySetting: day },this.updateCurrentAssignment);
+                    this.saveChanges();
+                    this.setState({ daySetting: day }, this.updateCurrentAssignment);
                     onClose();
                   }}>
-                  Yes
+                  Save changes
                 </button>
-                <button className="checkbox" onClick={onClose}>No</button>
+                <button className="checkbox"
+                  onClick={() => {
+                    this.setState({ daySetting: day }, this.updateCurrentAssignment);
+                    onClose();
+                  }}>
+                  Discard changes
+                </button>
+                <button className="checkbox" onClick={onClose}>Cancel</button>
               </div>
             </div>
           );
@@ -175,15 +178,53 @@ class App extends React.Component {
     });
   }
 
-  assignPlayer = (assignment,index) =>{
+  saveChanges = () => {
+    let temp = this.state.players.slice();
+
+    if (temp.length === 0) {
+      return;
+    }
+
+    switch (this.state.daySetting) {
+      case 0:
+        temp.map((player, index) => {
+          player.mon = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      case 1:
+        temp.map((player, index) => {
+          player.wed = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      case 2:
+        temp.map((player, index) => {
+          player.fri = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ players: temp });
+  }
+
+  assignPlayer = (assignment, index) => {
     let tempAssign = this.state.currentAssignment.slice();
 
-    if(tempAssign.length === 0)
+    if (tempAssign.length === 0) {
       return;
+    }
 
     tempAssign[index] = assignment;
 
-    this.setState({currentAssignment: tempAssign});
+    this.setState({ currentAssignment: tempAssign });
+  }
+
+  savePlayerState = () => {
+    // sessionStorage.setItem('appState', JSON.stringify(this.state));
   }
 
   componentDidUpdate(prevState) {
@@ -192,8 +233,25 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount(){
-    this.updateCurrentAssignment();
+  componentDidMount() {
+    window.addEventListener("beforeunload", this.savePlayerState);
+    let appState = JSON.parse(sessionStorage.getItem('appState'));
+
+    if (sessionStorage.getItem('appState') && appState.players.length > 0) {
+      this.setState({
+        players: appState.players,
+        currentAssignment: appState.currentAssignment,
+        daySetting: appState.daySetting,
+        isReset: appState.isReset,
+        autoScroll: appState.autoScroll,
+        page: appState.page,
+        visible: appState.visible
+      })
+    }
+    else {
+      this.setState({ players: DummyData }, this.updateCurrentAssignment);
+    }
+    
   }
 
   render() {
