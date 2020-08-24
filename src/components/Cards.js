@@ -10,19 +10,23 @@ class Cards extends React.Component {
   };
 
   handleClick = (cardId) => {
-    switch(cardId) {
+    switch (cardId) {
       case 1:
-        this.setState({selected1: 'selected', selected2: '', selected3: ''});
+        this.setState({ selected1: 'selected', selected2: '', selected3: '' });
         break;
       case 2:
-        this.setState({selected1: '', selected2: 'selected', selected3: ''});
+        this.setState({ selected1: '', selected2: 'selected', selected3: '' });
         break;
       case 3:
-        this.setState({selected1: '', selected2: '', selected3: 'selected'});
+        this.setState({ selected1: '', selected2: '', selected3: 'selected' });
         break;
       default:
         break;
-    } 
+    }
+
+    if(this.props.autoScroll){
+      this.props.nextPlayer();
+    }
   }
 
   handleKeyDown = (e) => {
@@ -38,7 +42,7 @@ class Cards extends React.Component {
   }
 
   handleVisibility = () => {
-    if(this.props.visible) {
+    if (this.props.visible) {
       document.addEventListener("keydown", this.handleKeyDown, false);
       return 'visible';
     }
@@ -48,13 +52,28 @@ class Cards extends React.Component {
     }
   }
 
-  componentDidMount(){
-    this.handleClick(this.getSelection(this.props.player.mon));
+  getDay(){
+    let pick;
+    switch (this.props.daySetting) {
+      case 0:
+        pick = this.getSelection(this.props.player.mon);
+        break;
+      case 1:
+        pick = this.getSelection(this.props.player.wed);
+        break;
+      case 2:
+        pick = this.getSelection(this.props.player.fri);
+        break;
+      default:
+        pick = 2;
+        break;
+    }
+    return pick;
   }
 
-  getSelection(data){
+  getSelection(data) {
     let out;
-    switch(data) {
+    switch (data) {
       case 'Full':
         out = 1;
         break;
@@ -67,8 +86,18 @@ class Cards extends React.Component {
       default:
         out = 2;
         break;
-    } 
+    }
     return out;
+  }
+
+  componentDidUpdate(prevProps){
+    if((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)){
+      this.handleClick(this.getDay());
+    }
+  }
+
+  componentDidMount() {
+    this.handleClick(this.getDay());
   }
 
   render() {
@@ -76,9 +105,13 @@ class Cards extends React.Component {
       <section className={"Cards " + this.handleVisibility()}>
         <div className="container-fluid">
           <div className="container">
+            <div className="user">
+              <i className="fab fa-discord"></i>
+              <span>{this.props.player.discord}</span>
+            </div>
             <div className="row">
               <div className="col-sm-4">
-                <div className={"card text-center "+ this.state.selected1} onClick={(e) => {
+                <div className={"card text-center " + this.state.selected1} onClick={(e) => {
                   e.preventDefault();
                   this.handleClick(1);
                 }}>
@@ -94,7 +127,7 @@ class Cards extends React.Component {
               </div>
               {/* <!-- END Col one --> */}
               <div className="col-sm-4">
-                <div className={"card text-center "+ this.state.selected2} onClick={(e) => this.handleClick(2)}>
+                <div className={"card text-center " + this.state.selected2} onClick={(e) => this.handleClick(2)}>
                   <div className="title">
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </div>
@@ -106,7 +139,7 @@ class Cards extends React.Component {
               </div>
               {/* <!-- END Col two --> */}
               <div className="col-sm-4">
-                <div className={"card text-center "+ this.state.selected3} onClick={(e) => this.handleClick(3)}>
+                <div className={"card text-center " + this.state.selected3} onClick={(e) => this.handleClick(3)}>
                   <div className="title">
                     <i className="fa fa-couch" aria-hidden="true"></i>
                   </div>
