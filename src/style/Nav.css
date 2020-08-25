@@ -33,6 +33,11 @@
 #navbarSupportedContent ul li .nav-link i{
 	margin-right: 10px;
 }
+
+#navbarSupportedContent ul li .nav-link.google:hover i{
+	animation: google 3s linear infinite;
+}
+
 #navbarSupportedContent li {
 	list-style-type: none;
 	float: left;
@@ -153,3 +158,10 @@
 		left: -25px;
 	}
 }
+
+@keyframes google {
+	0%   {color:#4285F4;}
+	33%  {color:#DB4437;}
+	66%  {color:#F4B400;}
+	100% {color:#0F9D58;}
+  }

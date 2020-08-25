@@ -39,9 +39,17 @@ app.use(favicon(__dirname + '/build/favicon.ico'));
 // the __dirname is the current directory from where the script is running
 app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'build')));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 app.get('/ping', function (req, res) {
  return res.send('pong');
 });
+
 
 //------------------------Backend API-------------------------------
 app.get("/players", async (req, res) => { try {
@@ -100,6 +108,11 @@ app.get("/players", async (req, res) => { try {
   // await sheet.saveUpdatedCells(); 
 
   res.send(players);
+} catch (e) { console.log(e); } });
+
+app.post("/upload", async (req, res) => { try {
+  console.log(req.body);
+  res.send('OK');
 } catch (e) { console.log(e); } });
 //------------------------Backend API END-------------------------------
 

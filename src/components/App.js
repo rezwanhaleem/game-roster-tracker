@@ -23,7 +23,10 @@ class App extends React.Component {
     day: ['Monday', 'Wednesday', 'Friday'],
     isReset: false,
     loading: '',
-    currentAssignment: []
+    uploading: '',
+    currentAssignment: [],
+    dataLoaded: false,
+    loadID: [false, false, false]
   };
 
   updateCurrentAssignment() {
@@ -57,11 +60,11 @@ class App extends React.Component {
       try {
         res = await axios.get('/players');
         setTimeout(() => {
-          this.setState({ players: res.data, loading: '' });
+          this.setState({ players: res.data, loading: '', dataLoaded: true },this.updateCurrentAssignment);
         }, 2000);
       }
       catch (err) {
-        console.log(err);
+        console.log('Connection Failed! :(. Error Log:' + err);
         this.setState({ loading: '' });
       }
     });
@@ -180,6 +183,7 @@ class App extends React.Component {
 
   saveChanges = () => {
     let temp = this.state.players.slice();
+    let tempIsLoaded = this.state.loadID.slice();
 
     if (temp.length === 0) {
       return;
@@ -208,7 +212,14 @@ class App extends React.Component {
         break;
     }
 
-    this.setState({ players: temp });
+    tempIsLoaded[this.state.daySetting] = true;
+    this.setState({ players: temp, loadID: tempIsLoaded });
+  }
+
+  toggleLoad = (id) => {
+    let tempIsLoaded = this.state.loadID.slice();
+    tempIsLoaded[id] = !tempIsLoaded[id];
+    this.setState({ loadID: tempIsLoaded });
   }
 
   assignPlayer = (assignment, index) => {
@@ -221,6 +232,55 @@ class App extends React.Component {
     tempAssign[index] = assignment;
 
     this.setState({ currentAssignment: tempAssign });
+  }
+
+  upload = async () => {
+    let res;
+
+    let config = this.state.loadID.slice();
+    config[this.state.daySetting] = true;
+
+    this.setState({
+      uploading: 'upwards'
+    }, async () => {
+      try {
+        res = await axios.post('/upload',{
+          players:  JSON.stringify(this.state.players),
+          config:  JSON.stringify(config)
+        });
+        setTimeout(() => {
+          this.setState({ uploading: ''});
+        }, 2000);
+      }
+      catch (err) {
+        console.log('Connection Failed! :(. Error Log:' + err);
+        this.setState({ uploading: '' });
+      }
+    });
+  }
+
+  startOver = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className='custom-ui'>
+            <h1 style={{ color: '#DB4437' }}>Are you sure?</h1>
+            <p> This will discard ALL changes and refresh the page!</p>
+            <div className='alert-container'>
+              <button className="checkbox" style={{ color: '#DB4437' }}
+                onClick={() => {
+                  window.removeEventListener("beforeunload", this.savePlayerState);
+                  window.location.reload();
+                  onClose();
+                }}>
+                Yes
+              </button>
+              <button className="checkbox" onClick={onClose}>Cancel</button>
+            </div>
+          </div>
+        );
+      }
+    });
   }
 
   savePlayerState = () => {
@@ -251,7 +311,7 @@ class App extends React.Component {
     else {
       this.setState({ players: DummyData }, this.updateCurrentAssignment);
     }
-    
+
   }
 
   render() {
@@ -303,6 +363,12 @@ class App extends React.Component {
                 players={this.state.players}
                 daySetting={this.state.daySetting}
                 currentAssignment={this.state.currentAssignment}
+                loadID={this.state.loadID}
+                dataLoaded={this.state.dataLoaded}
+                toggleLoad={this.toggleLoad}
+                upload={this.upload}
+                startOver={this.startOver}
+                changePage={this.handlePageChange}
               />
             </div>
           </div>
