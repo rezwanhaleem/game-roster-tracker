@@ -76,7 +76,7 @@ class Nav extends React.Component {
                             <div className="nav-link" ><i className="fas fa-file-upload"></i>Upload</div>
                         </li>
                         <li>
-                            <div className="nav-link google" >Sign in with <i className="fab fa-google"></i></div>
+                            <a href={this.props.googleUrl} target="_blank" rel="noopener noreferrer" className="nav-link google" >Sign in with <i className="fab fa-google"></i></a>
                         </li>
                     </ul>
                 </div>

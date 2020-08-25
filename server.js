@@ -33,6 +33,19 @@ const creds = {
   "client_x509_cert_url": process.env.GOOGLE_CLIENT_CERT
 };
 
+const oauth2 = google.oauth2('v2');
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_OAUTH_CLIENT_ID,
+  process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+  process.env.GOOGLE_OAUTH_REDIRECT_URL
+);
+
+const googleUrl = oauth2Client.generateAuthUrl({
+  // 'online' (default) or 'offline' (gets refresh_token)
+  access_type: 'offline',
+  scope: 'https://www.googleapis.com/auth/userinfo.email'
+});
+
 //------------------------GOOGLE END-------------------------------
 
 app.use(favicon(__dirname + '/build/favicon.ico'));
@@ -52,7 +65,7 @@ app.get('/ping', function (req, res) {
 
 
 //------------------------Backend API-------------------------------
-app.get("/players", async (req, res) => { try {
+app.get("/api/players", async (req, res) => { try {
     // Identifying which document we'll be accessing/reading from
   const doc = new GoogleSpreadsheet(spreadsheetId);
 
@@ -110,9 +123,26 @@ app.get("/players", async (req, res) => { try {
   res.send(players);
 } catch (e) { console.log(e); } });
 
-app.post("/upload", async (req, res) => { try {
+app.post("/api/upload", async (req, res) => { try {
   console.log(req.body);
   res.send('OK');
+} catch (e) { console.log(e); } });
+
+app.get("/api/googleUrl", async (req, res) => { try {
+  res.send(googleUrl);
+} catch (e) { console.log(e); } });
+
+app.post("/api/googleAuth", async (req, res) => { try {
+  const code = req.body.code;
+
+  const {tokens} = await oauth2Client.getToken(code)
+  oauth2Client.setCredentials(tokens);
+
+  const userInfo = await oauth2.userinfo.get({
+    auth: oauth2Client,
+  });
+
+  console.log(userInfo.data);
 } catch (e) { console.log(e); } });
 //------------------------Backend API END-------------------------------
 

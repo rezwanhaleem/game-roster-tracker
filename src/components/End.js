@@ -89,7 +89,11 @@ class End extends React.Component {
                         </div>
                     </div>
                     <div className="finish">
-                        <div className="next-page" onClick={this.upload}><i className="fas fa-arrow-up" />Upload</div>
+                        <div className="next-page" onClick={this.upload}>
+                            <div className={"icon-container " + this.props.uploading}>
+                                <i className="fas fa-arrow-up" />Upload
+                            </div>
+                        </div>
                         <div className="next-page start-over" onClick={this.props.startOver}><i className="fas fa-undo" />Start Over</div>
                     </div>
                 </div>

@@ -26,7 +26,8 @@ class App extends React.Component {
     uploading: '',
     currentAssignment: [],
     dataLoaded: false,
-    loadID: [false, false, false]
+    loadID: [false, false, false],
+    googleUrl: ''
   };
 
   updateCurrentAssignment() {
@@ -58,13 +59,13 @@ class App extends React.Component {
       loading: 'fa-spin'
     }, async () => {
       try {
-        res = await axios.get('/players');
+        res = await axios.get('/api/players');
         setTimeout(() => {
           this.setState({ players: res.data, loading: '', dataLoaded: true },this.updateCurrentAssignment);
         }, 2000);
       }
       catch (err) {
-        console.log('Connection Failed! :(. Error Log:' + err);
+        console.log('Connection Failed! :(.  ' + err);
         this.setState({ loading: '' });
       }
     });
@@ -244,7 +245,7 @@ class App extends React.Component {
       uploading: 'upwards'
     }, async () => {
       try {
-        res = await axios.post('/upload',{
+        res = await axios.post('/api/upload',{
           players:  JSON.stringify(this.state.players),
           config:  JSON.stringify(config)
         });
@@ -253,7 +254,7 @@ class App extends React.Component {
         }, 2000);
       }
       catch (err) {
-        console.log('Connection Failed! :(. Error Log:' + err);
+        console.log('Connection Failed! :(.  ' + err);
         this.setState({ uploading: '' });
       }
     });
@@ -283,6 +284,31 @@ class App extends React.Component {
     });
   }
 
+  getGoogleUrl = async () => {
+    let res;
+
+    try {
+      res = await axios.get('/api/googleUrl');
+      this.setState({ googleUrl: res.data });
+    }
+    catch (err) {
+      console.log('Connection Failed! :(. ' + err);
+    }
+  }
+
+  authGoogle = async (code) => {
+    let res;
+
+    try {
+      res = await axios.post('/api/googleAuth',{
+        code:  code
+      });
+    }
+    catch (err) {
+      console.log('Connection Failed! :(. ' + err);
+    }
+  }
+
   savePlayerState = () => {
     // sessionStorage.setItem('appState', JSON.stringify(this.state));
   }
@@ -294,6 +320,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    let params = new URLSearchParams(window.location.search);
+    if(params.has("code")) {
+      this.authGoogle(params.get("code"));
+    }
+
+    this.getGoogleUrl();
+
     window.addEventListener("beforeunload", this.savePlayerState);
     let appState = JSON.parse(sessionStorage.getItem('appState'));
 
@@ -320,7 +353,7 @@ class App extends React.Component {
     };
     return (
       <div className="App">
-        <Nav page={this.state.page} onPageChange={this.handlePageChange} />
+        <Nav page={this.state.page} onPageChange={this.handlePageChange} googleUrl={this.state.googleUrl} />
         <div className="container">
           {/* <div className="loadData" onClick={this.loadData}>
             <i className="fa fa-download" aria-hidden="true"></i>
@@ -365,6 +398,7 @@ class App extends React.Component {
                 currentAssignment={this.state.currentAssignment}
                 loadID={this.state.loadID}
                 dataLoaded={this.state.dataLoaded}
+                uploading={this.state.uploading}
                 toggleLoad={this.toggleLoad}
                 upload={this.upload}
                 startOver={this.startOver}

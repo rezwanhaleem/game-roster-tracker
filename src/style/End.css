@@ -83,8 +83,21 @@
   margin-left: 0px !important;
 }
 
-
-
 .next-page.start-over:hover {
   color: #DB4437;
+}
+
+.icon-container {
+  line-height: 1em;
+  overflow: hidden;
+}
+
+.icon-container.upwards i {
+  transform: translateY(100%);
+  animation: upload 2s linear infinite;
+}
+
+@keyframes upload {
+	from   {transform: translateY(100%)}
+	to  {transform: translateY(-100%)}
 }

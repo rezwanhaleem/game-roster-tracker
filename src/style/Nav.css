@@ -34,6 +34,10 @@
 	margin-right: 10px;
 }
 
+#navbarSupportedContent ul li .nav-link.google {
+	line-height: 1em;
+}
+
 #navbarSupportedContent ul li .nav-link.google:hover i{
 	animation: google 3s linear infinite;
 }
