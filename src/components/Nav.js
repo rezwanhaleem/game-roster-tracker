@@ -1,4 +1,5 @@
 import React from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 
 import '../style/Nav.css';
 
@@ -15,7 +16,7 @@ class Nav extends React.Component {
 
     constructor(props) {
         super(props);
-        this.tab = [React.createRef(),React.createRef(),React.createRef()];
+        this.tab = [React.createRef(), React.createRef(), React.createRef()];
     }
 
     handleClick = (tabId) => {
@@ -43,14 +44,77 @@ class Nav extends React.Component {
         this.props.onPageChange(tabId);
     }
 
+    signIn = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                    <div className='custom-ui'>
+                        <h1 style={{ color: '#0F9D58' }}>Sign in with Google?</h1>
+                        <p> This will discard ALL changes and take you to Google!</p>
+                        <div className='alert-container'>
+                            <button className="checkbox" style={{ color: '#0F9D58' }}
+                                onClick={() => {
+                                    this.props.signIn();
+                                    onClose();
+                                }}>
+                                Yes
+                            </button>
+                            <button className="checkbox" onClick={onClose}>Cancel</button>
+                        </div>
+                    </div>
+                );
+            }
+        });
+    }
+
+    signOut = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                    <div className='custom-ui'>
+                        <h1 style={{ color: '#DB4437' }}>Want to sign out?</h1>
+                        <p> This will discard ALL changes and refresh the page!</p>
+                        <div className='alert-container'>
+                            <button className="checkbox" style={{ color: '#DB4437' }}
+                                onClick={() => {
+                                    this.props.signOut();
+                                    onClose();
+                                }}>
+                                Yes
+                            </button>
+                            <button className="checkbox" onClick={onClose}>Cancel</button>
+                        </div>
+                    </div>
+                );
+            }
+        });
+    }
+
+    renderLogin = () => {
+        if (this.props.userName !== "") {
+            return (
+                <div className="nav-link google" onClick={this.signOut}><i className="fab fa-google"></i>{this.props.userName}</div>
+            );
+        }
+        else {
+            return (
+                <div className="nav-link google" onClick={this.signIn}>Sign in with <i className="fab fa-google"></i></div>
+            );
+        }
+    }
+
     componentDidUpdate(prevProps) {
-        if (this.props.page !== prevProps.page) {
+        if ((this.props.page !== prevProps.page) ||
+            (this.props.googleUrl !== prevProps.googleUrl)) {
             this.handleClick(this.props.page);
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.handleClick(this.props.page);
+        setTimeout(() => { 
+            this.handleClick(this.props.page);
+        }, 3000);
     }
 
     render() {
@@ -76,7 +140,7 @@ class Nav extends React.Component {
                             <div className="nav-link" ><i className="fas fa-file-upload"></i>Upload</div>
                         </li>
                         <li>
-                            <a href={this.props.googleUrl} target="_blank" rel="noopener noreferrer" className="nav-link google" >Sign in with <i className="fab fa-google"></i></a>
+                            {this.renderLogin()}
                         </li>
                     </ul>
                 </div>

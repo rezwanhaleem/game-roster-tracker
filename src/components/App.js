@@ -27,7 +27,8 @@ class App extends React.Component {
     currentAssignment: [],
     dataLoaded: false,
     loadID: [false, false, false],
-    googleUrl: ''
+    googleUrl: '',
+    userName: ''
   };
 
   updateCurrentAssignment() {
@@ -59,9 +60,13 @@ class App extends React.Component {
       loading: 'fa-spin'
     }, async () => {
       try {
-        res = await axios.get('/api/players');
+        res = await axios.get('/api/players', {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         setTimeout(() => {
-          this.setState({ players: res.data, loading: '', dataLoaded: true },this.updateCurrentAssignment);
+          this.setState({ players: res.data, loading: '', dataLoaded: true }, this.updateCurrentAssignment);
         }, 2000);
       }
       catch (err) {
@@ -245,12 +250,12 @@ class App extends React.Component {
       uploading: 'upwards'
     }, async () => {
       try {
-        res = await axios.post('/api/upload',{
-          players:  JSON.stringify(this.state.players),
-          config:  JSON.stringify(config)
+        res = await axios.post('/api/upload', {
+          players: JSON.stringify(this.state.players),
+          config: JSON.stringify(config)
         });
         setTimeout(() => {
-          this.setState({ uploading: ''});
+          this.setState({ uploading: '' });
         }, 2000);
       }
       catch (err) {
@@ -284,29 +289,74 @@ class App extends React.Component {
     });
   }
 
-  getGoogleUrl = async () => {
-    let res;
-
-    try {
-      res = await axios.get('/api/googleUrl');
-      this.setState({ googleUrl: res.data });
-    }
-    catch (err) {
-      console.log('Connection Failed! :(. ' + err);
+  signIn = () => {
+    if (this.state.googleUrl !== "") {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.open(this.state.googleUrl, "_self");
     }
   }
 
-  authGoogle = async (code) => {
+  signOut = async () => {
     let res;
 
     try {
-      res = await axios.post('/api/googleAuth',{
-        code:  code
-      });
+      res = await axios.post('/api/signout');
+      console.log(res);
     }
     catch (err) {
       console.log('Connection Failed! :(. ' + err);
     }
+    finally {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.location.reload();
+    }
+  }
+
+  init = async () => {
+    let res;
+    let userName = this.getCookie('userName');
+
+    if (userName === "") {
+      try {
+        res = await axios.get('/api/init', {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
+        this.setState({ googleUrl: res.data });
+      }
+      catch (err) {
+        console.log('Connection Failed! :(. ' + err);
+      }
+    }
+    else {
+      this.setState({ userName: userName });
+    }
+  }
+
+  auth = async (code) => {
+    let res;
+
+    try {
+      res = await axios.post('/api/auth', {
+        code: code
+      });
+      console.log(res);
+    }
+    catch (err) {
+      console.log('Connection Failed! :(. ' + err);
+    }
+    finally {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.location.replace(window.location.pathname);
+    }
+  }
+
+  getCookie = cookiename => {
+    // Get name followed by anything except a semicolon
+    var cookiestring = RegExp(cookiename + "=[^;]+").exec(document.cookie);
+    // Return everything after the equal sign, or an empty string if the cookie name not found
+    return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./, "") : "");
   }
 
   savePlayerState = () => {
@@ -321,11 +371,11 @@ class App extends React.Component {
 
   componentDidMount() {
     let params = new URLSearchParams(window.location.search);
-    if(params.has("code")) {
-      this.authGoogle(params.get("code"));
+    if (params.has("code")) {
+      this.auth(params.get("code"));
     }
 
-    this.getGoogleUrl();
+    this.init();
 
     window.addEventListener("beforeunload", this.savePlayerState);
     let appState = JSON.parse(sessionStorage.getItem('appState'));
@@ -353,11 +403,15 @@ class App extends React.Component {
     };
     return (
       <div className="App">
-        <Nav page={this.state.page} onPageChange={this.handlePageChange} googleUrl={this.state.googleUrl} />
+        <Nav
+          page={this.state.page}
+          onPageChange={this.handlePageChange}
+          googleUrl={this.state.googleUrl}
+          userName={this.state.userName}
+          signIn={this.signIn}
+          signOut={this.signOut}
+        />
         <div className="container">
-          {/* <div className="loadData" onClick={this.loadData}>
-            <i className="fa fa-download" aria-hidden="true"></i>
-          </div> */}
           <div className="pages" style={currentPage}>
             <div className="page page-0">
               <Start

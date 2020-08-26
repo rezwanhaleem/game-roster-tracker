@@ -1,5 +1,5 @@
 //server.js
-const PLAYER_COUNT=31;
+const PLAYER_COUNT=32;
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -8,6 +8,7 @@ const express = require('express');
 const favicon = require('express-favicon');
 const path = require('path');
 const bodyParser = require('body-parser');//Parse JSON requests
+const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 3001;
 const app = express();
 
@@ -18,7 +19,7 @@ const {google}        = require('googleapis');
 const request         = require('request');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
 
-const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID;
+const spreadsheetId = process.env.GOOGLE_OPEN_SPREADSHEET_ID;
 
 const creds = {
   "type": "service_account",
@@ -54,10 +55,11 @@ app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'build')));
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.get('/ping', function (req, res) {
  return res.send('pong');
@@ -67,7 +69,7 @@ app.get('/ping', function (req, res) {
 //------------------------Backend API-------------------------------
 app.get("/api/players", async (req, res) => { try {
     // Identifying which document we'll be accessing/reading from
-  const doc = new GoogleSpreadsheet(spreadsheetId);
+  const doc = new GoogleSpreadsheet(req.cookies.spreadsheetId);
 
   // Authentication
   await doc.useServiceAccountAuth(creds);
@@ -78,9 +80,6 @@ app.get("/api/players", async (req, res) => { try {
   // or use doc.sheetsById[id]
   const sheet = doc.sheetsByIndex[0]; 
 
-  // loads a range of cells
-  await sheet.loadCells(['C3:C'+PLAYER_COUNT, 'E3:E'+PLAYER_COUNT, 'G3:G'+PLAYER_COUNT, 'H3:H'+PLAYER_COUNT, 'I3:I'+PLAYER_COUNT]);
-
   let players = [], 
   columns = {
     nameCol:'C',
@@ -89,10 +88,18 @@ app.get("/api/players", async (req, res) => { try {
     wedCol:'H',
     friCol:'I'};
 
+  // loads a range of cells
+  await sheet.loadCells([
+    columns.nameCol+'3:'+columns.nameCol+PLAYER_COUNT,
+    columns.discordCol+'3:'+columns.discordCol+PLAYER_COUNT, 
+    columns.monCol+'3:'+columns.monCol+PLAYER_COUNT, 
+    columns.wedCol+'3:'+columns.wedCol+PLAYER_COUNT, 
+    columns.friCol+'3:'+columns.friCol+PLAYER_COUNT]);
+
   let keys = Object.keys(columns);
 
   let letter;
-  for (i = 3; i < 32; i++) {
+  for (i = 3; i < PLAYER_COUNT+1; i++) {
     let row = i.toString();
     players.push({
       'name': sheet.getCellByA1(columns.nameCol + row).value,
@@ -128,11 +135,20 @@ app.post("/api/upload", async (req, res) => { try {
   res.send('OK');
 } catch (e) { console.log(e); } });
 
-app.get("/api/googleUrl", async (req, res) => { try {
+app.get("/api/init", async (req, res) => { try {
+  if(!req.cookies.spreadsheetId) {
+    res.cookie('spreadsheetId', process.env.GOOGLE_OPEN_SPREADSHEET_ID, {
+      maxAge: 60 * 60 * 1000, // 1 hour
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
+  }
+
   res.send(googleUrl);
 } catch (e) { console.log(e); } });
 
-app.post("/api/googleAuth", async (req, res) => { try {
+app.post("/api/auth", async (req, res) => { try {
   const code = req.body.code;
 
   const {tokens} = await oauth2Client.getToken(code)
@@ -142,7 +158,42 @@ app.post("/api/googleAuth", async (req, res) => { try {
     auth: oauth2Client,
   });
 
-  console.log(userInfo.data);
+  const authAccs = process.env.GOOGLE_AUTHORIZED_ACCOUNTS.split(",");
+
+  if(authAccs.includes(userInfo.data.email)){
+    res.cookie('spreadsheetId', process.env.GOOGLE_SPREADSHEET_ID, {
+      maxAge: 60 * 60 * 1000, // 1 hour
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    });
+
+    let userName;
+
+    if(!userInfo.data.name){
+      userName = userInfo.data.email;
+    }
+    else{
+      userName = userInfo.data.name;
+    }
+
+    res.cookie('userName', userName, {
+      maxAge: 60 * 60 * 1000, // 1 hour
+      secure: true,
+      sameSite: true,
+    });
+
+    res.send("Authorized");
+  }
+  else{
+    res.send("Not Authorized!");
+  }
+} catch (e) { console.log(e); } });
+
+app.post("/api/signout", async (req, res) => { try {
+  res.clearCookie('userName');
+  res.clearCookie('spreadsheetId');
+  res.send('Signed Out!');
 } catch (e) { console.log(e); } });
 //------------------------Backend API END-------------------------------
 
