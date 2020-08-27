@@ -6,8 +6,9 @@ import '../style/End.css';
 class End extends React.Component {
 
     toggleLoad = (id) => {
-        if (this.props.daySetting !== id)
+        if ((this.props.daySetting !== id)){
             this.props.toggleLoad(id);
+        }
     }
 
     upload = () => {
@@ -21,7 +22,7 @@ class End extends React.Component {
                             <div className='alert-container'>
                                 <button className="checkbox" style={{ color: '#0F9D58' }}
                                     onClick={() => {
-                                        this.props.upload();
+                                        this.props.saveChanges(true);
                                         onClose();
                                     }}>
                                     Yes

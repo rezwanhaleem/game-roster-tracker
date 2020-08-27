@@ -77,10 +77,10 @@ class Cards extends React.Component {
   getSelection(data) {
     let out;
     switch (data) {
-      case 'Full':
+      case 'FULL':
         out = 1;
         break;
-      case 'NO':
+      case 'NONE':
         out = 2;
         break;
       case 'Benched':
@@ -97,16 +97,16 @@ class Cards extends React.Component {
     let out;
     switch (id) {
       case 1:
-        out = 'Full';
+        out = 'FULL';
         break;
       case 2:
-        out = 'NO';
+        out = 'NONE';
         break;
       case 3:
         out = 'Benched';
         break;
       default:
-        out = 'TBD';
+        out = '';
         break;
     }
     return out;
@@ -154,7 +154,7 @@ class Cards extends React.Component {
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </div>
                   <div className="price">
-                    <h4>No</h4>
+                    <h4>None</h4>
                   </div>
                   <div className="checkbox"></div>
                 </div>

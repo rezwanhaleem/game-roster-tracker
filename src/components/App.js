@@ -18,7 +18,7 @@ class App extends React.Component {
     visible: 0,
     autoScroll: false,
     page: 0,
-    spreadSheetId: '1OnJiwZHyYwq8HXSYi_Y7g7vGWDSbB_uuzrZBHvPXQH4',
+    spreadSheetId: '',
     daySetting: 1,
     day: ['Monday', 'Wednesday', 'Friday'],
     isReset: false,
@@ -45,7 +45,7 @@ class App extends React.Component {
           assignment.push(player.fri);
           break;
         default:
-          assignment.push('TBD');
+          assignment.push('');
           break;
       }
       this.setState({ currentAssignment: assignment });
@@ -92,32 +92,32 @@ class App extends React.Component {
   }
 
   checkDaySettings() {
-    if (this.state.player[0].mon === 'TBD') {
+    if (this.state.player[0].mon === '') {
       this.setState({ daySetting: 0 }, this.updateCurrentAssignment);
     }
-    else if (this.state.player[0].wed === 'TBD') {
+    else if (this.state.player[0].wed === '') {
       this.setState({ daySetting: 1 }, this.updateCurrentAssignment);
     }
-    else if (this.state.player[0].fri === 'TBD') {
+    else if (this.state.player[0].fri === '') {
       this.setState({ daySetting: 2 }, this.updateCurrentAssignment);
     }
   }
 
   isAssigned(day) {
     if (day === 0) {
-      if (this.state.player[0].mon === 'TBD')
+      if (this.state.player[0].mon === '')
         return false;
       else
         return true;
     }
     else if (day === 1) {
-      if (this.state.player[0].wed === 'TBD')
+      if (this.state.player[0].wed === '')
         return false;
       else
         return true;
     }
     else if (day === 2) {
-      if (this.state.player[0].fri === 'TBD')
+      if (this.state.player[0].fri === '')
         return false;
       else
         return true;
@@ -135,7 +135,7 @@ class App extends React.Component {
               <div className='alert-container'>
                 <button className="checkbox"
                   onClick={() => {
-                    this.saveChanges();
+                    this.saveChanges(false);
                     this.setState({ daySetting: day }, this.updateCurrentAssignment);
                     onClose();
                   }}>
@@ -169,9 +169,9 @@ class App extends React.Component {
                 onClick={() => {
                   let temp = this.state.players.slice();
                   temp.map((player) => {
-                    player.mon = "TBD";
-                    player.wed = "TBD";
-                    player.fri = "TBD";
+                    player.mon = "";
+                    player.wed = "";
+                    player.fri = "";
                     return 0;
                   });
                   this.setState({ isReset: true, players: temp });
@@ -187,7 +187,7 @@ class App extends React.Component {
     });
   }
 
-  saveChanges = () => {
+  saveChanges = (upload) => {
     let temp = this.state.players.slice();
     let tempIsLoaded = this.state.loadID.slice();
 
@@ -219,7 +219,11 @@ class App extends React.Component {
     }
 
     tempIsLoaded[this.state.daySetting] = true;
-    this.setState({ players: temp, loadID: tempIsLoaded });
+    this.setState({ players: temp, loadID: tempIsLoaded }, () => {
+      if (upload) {
+        this.upload();
+      }
+    });
   }
 
   toggleLoad = (id) => {
@@ -243,17 +247,38 @@ class App extends React.Component {
   upload = async () => {
     let res;
 
-    let config = this.state.loadID.slice();
-    config[this.state.daySetting] = true;
-
     this.setState({
       uploading: 'upwards'
     }, async () => {
       try {
         res = await axios.post('/api/upload', {
           players: JSON.stringify(this.state.players),
-          config: JSON.stringify(config)
+          config: JSON.stringify(this.state.loadID)
         });
+
+        if (res.data.toString() === "Success") {
+          confirmAlert({
+            customUI: ({ onClose }) => {
+              return (
+                <div className='custom-ui'>
+                  <h1 style={{ color: '#0F9D58' }}>Changes Uploaded!</h1>
+                  <p> Would you like to see the changes at your Google Sheets?</p>
+                  <div className='alert-container'>
+                    <button className="checkbox" style={{ color: '#0F9D58' }}
+                      onClick={() => {
+                        window.open("https://docs.google.com/spreadsheets/d/" + this.state.spreadSheetId + "/edit?usp=sharing", "_blank");
+                        onClose();
+                      }}>
+                      Take me there!
+                    </button>
+                    <button className="checkbox" onClick={onClose}>No thanks</button>
+                  </div>
+                </div>
+              );
+            }
+          });
+        }
+
         setTimeout(() => {
           this.setState({ uploading: '' });
         }, 2000);
@@ -276,6 +301,9 @@ class App extends React.Component {
               <button className="checkbox" style={{ color: '#DB4437' }}
                 onClick={() => {
                   window.removeEventListener("beforeunload", this.savePlayerState);
+                  document.cookie = "appState=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  document.cookie = "spreadsheetId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                   window.location.reload();
                   onClose();
                 }}>
@@ -323,14 +351,14 @@ class App extends React.Component {
             'Cache-Control': 'no-cache'
           }
         });
-        this.setState({ googleUrl: res.data });
+        this.setState({ googleUrl: res.data, spreadSheetId: this.getCookie('spreadsheetId') });
       }
       catch (err) {
         console.log('Connection Failed! :(. ' + err);
       }
     }
     else {
-      this.setState({ userName: userName });
+      this.setState({ userName: userName, spreadSheetId: this.getCookie('spreadsheetId') });
     }
   }
 
@@ -341,7 +369,7 @@ class App extends React.Component {
       res = await axios.post('/api/auth', {
         code: code
       });
-      console.log(res);
+      document.cookie = "loginAttempt=" + res.data.toString();
     }
     catch (err) {
       console.log('Connection Failed! :(. ' + err);
@@ -359,8 +387,38 @@ class App extends React.Component {
     return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./, "") : "");
   }
 
+  checkAttempt = () => {
+    let loginAttempt = this.getCookie('loginAttempt');
+
+    if (loginAttempt === "Not Authorized") {
+      document.cookie = "loginAttempt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <div className='custom-ui'>
+              <h1 style={{ color: '#DB4437' }}>Sorry</h1>
+              <p style={{ color: '#DB4437' }}> You are not authorized to edit that protected Google Sheet!</p>
+              <div className='alert-container'>
+                <button className="checkbox" onClick={onClose}>
+                  Ok
+                </button>
+                <button className="checkbox" onClick={onClose}>Umm..Ok</button>
+              </div>
+            </div>
+          );
+        }
+      });
+    }
+    else if (loginAttempt === "Authorized") {
+      document.cookie = "loginAttempt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  }
+
   savePlayerState = () => {
     // sessionStorage.setItem('appState', JSON.stringify(this.state));
+    var now = new Date();
+    now.setTime(now.getTime() + 1 * 3600 * 1000);
+    document.cookie = "appState=" + JSON.stringify(this.state) + "; expires=" + now.toUTCString() + "; path=/; secure; samesite=strict";
   }
 
   componentDidUpdate(prevState) {
@@ -377,19 +435,30 @@ class App extends React.Component {
 
     this.init();
 
-    window.addEventListener("beforeunload", this.savePlayerState);
-    let appState = JSON.parse(sessionStorage.getItem('appState'));
+    this.checkAttempt();
 
-    if (sessionStorage.getItem('appState') && appState.players.length > 0) {
-      this.setState({
-        players: appState.players,
-        currentAssignment: appState.currentAssignment,
-        daySetting: appState.daySetting,
-        isReset: appState.isReset,
-        autoScroll: appState.autoScroll,
-        page: appState.page,
-        visible: appState.visible
-      })
+    window.addEventListener("beforeunload", this.savePlayerState);
+    // let appState = JSON.parse(sessionStorage.getItem('appState'));    
+
+    if (this.getCookie('appState') !== "") {
+      let appState = JSON.parse(this.getCookie('appState'));
+      
+      if(appState.players.length > 0){
+        this.setState({
+          players: appState.players,
+          currentAssignment: appState.currentAssignment,
+          daySetting: appState.daySetting,
+          isReset: appState.isReset,
+          autoScroll: appState.autoScroll,
+          page: appState.page,
+          visible: appState.visible,
+          dataLoaded: appState.dataLoaded,
+          loadID: appState.loadID
+        }, this.updateCurrentAssignment);
+      }
+      else{
+        this.setState({ players: DummyData }, this.updateCurrentAssignment);
+      }
     }
     else {
       this.setState({ players: DummyData }, this.updateCurrentAssignment);
@@ -454,7 +523,7 @@ class App extends React.Component {
                 dataLoaded={this.state.dataLoaded}
                 uploading={this.state.uploading}
                 toggleLoad={this.toggleLoad}
-                upload={this.upload}
+                saveChanges={this.saveChanges}
                 startOver={this.startOver}
                 changePage={this.handlePageChange}
               />

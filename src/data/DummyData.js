@@ -2,37 +2,37 @@ const DummyData = [
     {
       name: 'Rez',
       discord: 'Trash',
-      mon:'Full',
-      wed:'TBD',
-      fri:'TBD'
+      mon:'FULL',
+      wed:'',
+      fri:''
     },
     {
       name: 'Steven',
       discord: 'SoftFluff',
       mon:'Benched',
-      wed:'TBD',
-      fri:'TBD'
+      wed:'',
+      fri:''
     },
     {
       name: 'Quan',
       discord: 'Twice',
-      mon:'Full',
-      wed:'TBD',
-      fri:'TBD'
+      mon:'FULL',
+      wed:'',
+      fri:''
     },
     {
       name: 'Raymond',
       discord: 'Momo',
-      mon:'Full',
-      wed:'TBD',
-      fri:'TBD'
+      mon:'FULL',
+      wed:'',
+      fri:''
     },
     {
       name: 'Eric',
       discord: 'Omo',
-      mon:'NO',
-      wed:'TBD',
-      fri:'TBD'
+      mon:'NONE',
+      wed:'',
+      fri:''
     }
 ];
 
