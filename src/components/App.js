@@ -329,7 +329,7 @@ class App extends React.Component {
 
     try {
       res = await axios.post('/api/signout');
-      console.log(res);
+      document.cookie = "appState=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
     catch (err) {
       console.log('Connection Failed! :(. ' + err);
