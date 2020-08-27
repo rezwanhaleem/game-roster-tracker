@@ -5,6 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Nav from './Nav';
 import Start from './Start';
+import End from './End';
 import Progress from './Progress';
 import Carousel from './Carousel';
 import DummyData from '../data/DummyData';
@@ -17,16 +18,39 @@ class App extends React.Component {
     visible: 0,
     autoScroll: false,
     page: 0,
-    spreadSheetId: '1OnJiwZHyYwq8HXSYi_Y7g7vGWDSbB_uuzrZBHvPXQH4',
+    spreadSheetId: '',
     daySetting: 1,
     day: ['Monday', 'Wednesday', 'Friday'],
     isReset: false,
-    loading: ''
+    loading: '',
+    uploading: '',
+    currentAssignment: [],
+    dataLoaded: false,
+    loadID: [false, false, false],
+    googleUrl: '',
+    userName: ''
   };
 
-  constructor(props) {
-    super(props);
-    this.state.players = DummyData;
+  updateCurrentAssignment() {
+    let assignment = [];
+    this.state.players.map((player) => {
+      switch (this.state.daySetting) {
+        case 0:
+          assignment.push(player.mon);
+          break;
+        case 1:
+          assignment.push(player.wed);
+          break;
+        case 2:
+          assignment.push(player.fri);
+          break;
+        default:
+          assignment.push('');
+          break;
+      }
+      this.setState({ currentAssignment: assignment });
+      return 0;
+    });
   }
 
   loadData = async () => {
@@ -36,13 +60,17 @@ class App extends React.Component {
       loading: 'fa-spin'
     }, async () => {
       try {
-        res = await axios.get('/players');
+        res = await axios.get('/api/players', {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         setTimeout(() => {
-          this.setState({ players: res.data, loading: '' });
+          this.setState({ players: res.data, loading: '', dataLoaded: true }, this.updateCurrentAssignment);
         }, 2000);
       }
       catch (err) {
-        console.log(err);
+        console.log('Connection Failed! :(.  ' + err);
         this.setState({ loading: '' });
       }
     });
@@ -51,7 +79,7 @@ class App extends React.Component {
   selectPlayer = (index) => {
     if (index >= 0 && index < this.state.players.length)
       this.setState((state) => ({ previous: state.visible, visible: index }));
-    else if(index >= this.state.players.length)
+    else if (index >= this.state.players.length)
       this.handlePageChange(2);
   }
 
@@ -64,32 +92,32 @@ class App extends React.Component {
   }
 
   checkDaySettings() {
-    if (this.state.player[0].mon === 'TBD') {
-      this.setState({ daySetting: 0 });
+    if (this.state.player[0].mon === '') {
+      this.setState({ daySetting: 0 }, this.updateCurrentAssignment);
     }
-    else if (this.state.player[0].wed === 'TBD') {
-      this.setState({ daySetting: 1 });
+    else if (this.state.player[0].wed === '') {
+      this.setState({ daySetting: 1 }, this.updateCurrentAssignment);
     }
-    else if (this.state.player[0].fri === 'TBD') {
-      this.setState({ daySetting: 2 });
+    else if (this.state.player[0].fri === '') {
+      this.setState({ daySetting: 2 }, this.updateCurrentAssignment);
     }
   }
 
   isAssigned(day) {
     if (day === 0) {
-      if (this.state.player[0].mon === 'TBD')
+      if (this.state.player[0].mon === '')
         return false;
       else
         return true;
     }
     else if (day === 1) {
-      if (this.state.player[0].wed === 'TBD')
+      if (this.state.player[0].wed === '')
         return false;
       else
         return true;
     }
     else if (day === 2) {
-      if (this.state.player[0].fri === 'TBD')
+      if (this.state.player[0].fri === '')
         return false;
       else
         return true;
@@ -103,16 +131,24 @@ class App extends React.Component {
           return (
             <div className='custom-ui'>
               <h1>Are you sure?</h1>
-              <p>You want to edit {this.state.day[day]}?</p>
+              <p>You want to edit {this.state.day[day]}? You have unsaved changes!</p>
               <div className='alert-container'>
                 <button className="checkbox"
                   onClick={() => {
-                    this.setState({ daySetting: day });
+                    this.saveChanges(false);
+                    this.setState({ daySetting: day }, this.updateCurrentAssignment);
                     onClose();
                   }}>
-                  Yes
+                  Save changes
                 </button>
-                <button className="checkbox" onClick={onClose}>No</button>
+                <button className="checkbox"
+                  onClick={() => {
+                    this.setState({ daySetting: day }, this.updateCurrentAssignment);
+                    onClose();
+                  }}>
+                  Discard changes
+                </button>
+                <button className="checkbox" onClick={onClose}>Cancel</button>
               </div>
             </div>
           );
@@ -131,11 +167,11 @@ class App extends React.Component {
             <div className='alert-container'>
               <button style={{ color: '#DB4437' }} className="checkbox"
                 onClick={() => {
-                  let temp = this.state.players;
+                  let temp = this.state.players.slice();
                   temp.map((player) => {
-                    player.mon = "TBD";
-                    player.wed = "TBD";
-                    player.fri = "TBD";
+                    player.mon = "";
+                    player.wed = "";
+                    player.fri = "";
                     return 0;
                   });
                   this.setState({ isReset: true, players: temp });
@@ -151,10 +187,283 @@ class App extends React.Component {
     });
   }
 
+  saveChanges = (upload) => {
+    let temp = this.state.players.slice();
+    let tempIsLoaded = this.state.loadID.slice();
+
+    if (temp.length === 0) {
+      return;
+    }
+
+    switch (this.state.daySetting) {
+      case 0:
+        temp.map((player, index) => {
+          player.mon = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      case 1:
+        temp.map((player, index) => {
+          player.wed = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      case 2:
+        temp.map((player, index) => {
+          player.fri = this.state.currentAssignment[index];
+          return 0;
+        });
+        break;
+      default:
+        break;
+    }
+
+    tempIsLoaded[this.state.daySetting] = true;
+    this.setState({ players: temp, loadID: tempIsLoaded }, () => {
+      if (upload) {
+        this.upload();
+      }
+    });
+  }
+
+  toggleLoad = (id) => {
+    let tempIsLoaded = this.state.loadID.slice();
+    tempIsLoaded[id] = !tempIsLoaded[id];
+    this.setState({ loadID: tempIsLoaded });
+  }
+
+  assignPlayer = (assignment, index) => {
+    let tempAssign = this.state.currentAssignment.slice();
+
+    if (tempAssign.length === 0) {
+      return;
+    }
+
+    tempAssign[index] = assignment;
+
+    this.setState({ currentAssignment: tempAssign });
+  }
+
+  upload = async () => {
+    let res;
+
+    this.setState({
+      uploading: 'upwards'
+    }, async () => {
+      try {
+        res = await axios.post('/api/upload', {
+          players: JSON.stringify(this.state.players),
+          config: JSON.stringify(this.state.loadID)
+        });
+
+        if (res.data.toString() === "Success") {
+          confirmAlert({
+            customUI: ({ onClose }) => {
+              return (
+                <div className='custom-ui'>
+                  <h1 style={{ color: '#0F9D58' }}>Changes Uploaded!</h1>
+                  <p> Would you like to see the changes at your Google Sheets?</p>
+                  <div className='alert-container'>
+                    <button className="checkbox" style={{ color: '#0F9D58' }}
+                      onClick={() => {
+                        window.open("https://docs.google.com/spreadsheets/d/" + this.state.spreadSheetId + "/edit?usp=sharing", "_blank");
+                        onClose();
+                      }}>
+                      Take me there!
+                    </button>
+                    <button className="checkbox" onClick={onClose}>No thanks</button>
+                  </div>
+                </div>
+              );
+            }
+          });
+        }
+
+        setTimeout(() => {
+          this.setState({ uploading: '' });
+        }, 2000);
+      }
+      catch (err) {
+        console.log('Connection Failed! :(.  ' + err);
+        this.setState({ uploading: '' });
+      }
+    });
+  }
+
+  startOver = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className='custom-ui'>
+            <h1 style={{ color: '#DB4437' }}>Are you sure?</h1>
+            <p> This will discard ALL changes and refresh the page!</p>
+            <div className='alert-container'>
+              <button className="checkbox" style={{ color: '#DB4437' }}
+                onClick={() => {
+                  window.removeEventListener("beforeunload", this.savePlayerState);
+                  document.cookie = "appState=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  document.cookie = "spreadsheetId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  window.location.reload();
+                  onClose();
+                }}>
+                Yes
+              </button>
+              <button className="checkbox" onClick={onClose}>Cancel</button>
+            </div>
+          </div>
+        );
+      }
+    });
+  }
+
+  signIn = () => {
+    if (this.state.googleUrl !== "") {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.open(this.state.googleUrl, "_self");
+    }
+  }
+
+  signOut = async () => {
+    let res;
+
+    try {
+      res = await axios.post('/api/signout');
+      console.log(res);
+    }
+    catch (err) {
+      console.log('Connection Failed! :(. ' + err);
+    }
+    finally {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.location.reload();
+    }
+  }
+
+  init = async () => {
+    let res;
+    let userName = this.getCookie('userName');
+
+    if (userName === "") {
+      try {
+        res = await axios.get('/api/init', {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
+        this.setState({ googleUrl: res.data, spreadSheetId: this.getCookie('spreadsheetId') });
+      }
+      catch (err) {
+        console.log('Connection Failed! :(. ' + err);
+      }
+    }
+    else {
+      this.setState({ userName: userName, spreadSheetId: this.getCookie('spreadsheetId') });
+    }
+  }
+
+  auth = async (code) => {
+    let res;
+
+    try {
+      res = await axios.post('/api/auth', {
+        code: code
+      });
+      document.cookie = "loginAttempt=" + res.data.toString();
+    }
+    catch (err) {
+      console.log('Connection Failed! :(. ' + err);
+    }
+    finally {
+      window.removeEventListener("beforeunload", this.savePlayerState);
+      window.location.replace(window.location.pathname);
+    }
+  }
+
+  getCookie = cookiename => {
+    // Get name followed by anything except a semicolon
+    var cookiestring = RegExp(cookiename + "=[^;]+").exec(document.cookie);
+    // Return everything after the equal sign, or an empty string if the cookie name not found
+    return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./, "") : "");
+  }
+
+  checkAttempt = () => {
+    let loginAttempt = this.getCookie('loginAttempt');
+
+    if (loginAttempt === "Not Authorized") {
+      document.cookie = "loginAttempt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <div className='custom-ui'>
+              <h1 style={{ color: '#DB4437' }}>Sorry</h1>
+              <p style={{ color: '#DB4437' }}> You are not authorized to edit that protected Google Sheet!</p>
+              <div className='alert-container'>
+                <button className="checkbox" onClick={onClose}>
+                  Ok
+                </button>
+                <button className="checkbox" onClick={onClose}>Umm..Ok</button>
+              </div>
+            </div>
+          );
+        }
+      });
+    }
+    else if (loginAttempt === "Authorized") {
+      document.cookie = "loginAttempt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  }
+
+  savePlayerState = () => {
+    // sessionStorage.setItem('appState', JSON.stringify(this.state));
+    var now = new Date();
+    now.setTime(now.getTime() + 1 * 3600 * 1000);
+    document.cookie = "appState=" + JSON.stringify(this.state) + "; expires=" + now.toUTCString() + "; path=/; secure; samesite=strict";
+  }
+
   componentDidUpdate(prevState) {
     if (this.state.player !== prevState.player) {
       this.checkDaySettings();
     }
+  }
+
+  componentDidMount() {
+    let params = new URLSearchParams(window.location.search);
+    if (params.has("code")) {
+      this.auth(params.get("code"));
+    }
+
+    this.init();
+
+    this.checkAttempt();
+
+    window.addEventListener("beforeunload", this.savePlayerState);
+    // let appState = JSON.parse(sessionStorage.getItem('appState'));    
+
+    if (this.getCookie('appState') !== "") {
+      let appState = JSON.parse(this.getCookie('appState'));
+      
+      if(appState.players.length > 0){
+        this.setState({
+          players: appState.players,
+          currentAssignment: appState.currentAssignment,
+          daySetting: appState.daySetting,
+          isReset: appState.isReset,
+          autoScroll: appState.autoScroll,
+          page: appState.page,
+          visible: appState.visible,
+          dataLoaded: appState.dataLoaded,
+          loadID: appState.loadID
+        }, this.updateCurrentAssignment);
+      }
+      else{
+        this.setState({ players: DummyData }, this.updateCurrentAssignment);
+      }
+    }
+    else {
+      this.setState({ players: DummyData }, this.updateCurrentAssignment);
+    }
+
   }
 
   render() {
@@ -163,11 +472,15 @@ class App extends React.Component {
     };
     return (
       <div className="App">
-        <Nav page={this.state.page} onPageChange={this.handlePageChange} />
+        <Nav
+          page={this.state.page}
+          onPageChange={this.handlePageChange}
+          googleUrl={this.state.googleUrl}
+          userName={this.state.userName}
+          signIn={this.signIn}
+          signOut={this.signOut}
+        />
         <div className="container">
-          {/* <div className="loadData" onClick={this.loadData}>
-            <i className="fa fa-download" aria-hidden="true"></i>
-          </div> */}
           <div className="pages" style={currentPage}>
             <div className="page page-0">
               <Start
@@ -198,6 +511,21 @@ class App extends React.Component {
                 onPlayerChange={this.selectPlayer}
                 autoScroll={this.state.autoScroll}
                 isReset={this.state.isReset}
+                assignPlayer={this.assignPlayer}
+              />
+            </div>
+            <div className="page page-2">
+              <End
+                players={this.state.players}
+                daySetting={this.state.daySetting}
+                currentAssignment={this.state.currentAssignment}
+                loadID={this.state.loadID}
+                dataLoaded={this.state.dataLoaded}
+                uploading={this.state.uploading}
+                toggleLoad={this.toggleLoad}
+                saveChanges={this.saveChanges}
+                startOver={this.startOver}
+                changePage={this.handlePageChange}
               />
             </div>
           </div>

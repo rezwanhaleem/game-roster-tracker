@@ -22,6 +22,10 @@ class Carousel extends React.Component {
         }
     }
 
+    assignPlayer = (assignment,index) =>{
+        this.props.assignPlayer(assignment,index);
+    }
+
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown, false);
     }
@@ -34,12 +38,14 @@ class Carousel extends React.Component {
         return this.props.players.map((player, index) => {
             return <Cards 
                 key={index} 
+                id={index}
                 visible={(this.props.visible === index)} 
                 player={player} 
                 daySetting={this.props.daySetting} 
                 nextPlayer={this.nextPlayer} 
                 autoScroll={this.props.autoScroll} 
                 isReset={this.props.isReset}
+                assignPlayer={this.assignPlayer}
             />;
         });
     };

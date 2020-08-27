@@ -21,10 +21,13 @@ class Cards extends React.Component {
         this.setState({ selected1: '', selected2: '', selected3: 'selected' });
         break;
       default:
+        this.setState({ selected1: '', selected2: '', selected3: '' });
         break;
     }
 
-    if(this.props.autoScroll){
+    this.props.assignPlayer(this.getAssignment(cardId),this.props.id);
+
+    if (this.props.autoScroll) {
       this.props.nextPlayer();
     }
   }
@@ -52,7 +55,7 @@ class Cards extends React.Component {
     }
   }
 
-  getDay(){
+  getDay() {
     let pick;
     switch (this.props.daySetting) {
       case 0:
@@ -65,7 +68,7 @@ class Cards extends React.Component {
         pick = this.getSelection(this.props.player.fri);
         break;
       default:
-        pick = 2;
+        pick = -1;
         break;
     }
     return pick;
@@ -74,24 +77,43 @@ class Cards extends React.Component {
   getSelection(data) {
     let out;
     switch (data) {
-      case 'Full':
+      case 'FULL':
         out = 1;
         break;
-      case 'NO':
+      case 'NONE':
         out = 2;
         break;
       case 'Benched':
         out = 3;
         break;
       default:
-        out = 2;
+        out = -1;
         break;
     }
     return out;
   }
 
-  componentDidUpdate(prevProps){
-    if((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)){
+  getAssignment(id) {
+    let out;
+    switch (id) {
+      case 1:
+        out = 'FULL';
+        break;
+      case 2:
+        out = 'NONE';
+        break;
+      case 3:
+        out = 'Benched';
+        break;
+      default:
+        out = '';
+        break;
+    }
+    return out;
+  }
+
+  componentDidUpdate(prevProps) {
+    if ((this.props.daySetting !== prevProps.daySetting) || (this.props.isReset !== prevProps.isReset)) {
       this.handleClick(this.getDay());
     }
   }
@@ -132,7 +154,7 @@ class Cards extends React.Component {
                     <i className="fa fa-times" aria-hidden="true"></i>
                   </div>
                   <div className="price">
-                    <h4>No</h4>
+                    <h4>None</h4>
                   </div>
                   <div className="checkbox"></div>
                 </div>

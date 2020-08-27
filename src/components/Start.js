@@ -1,6 +1,33 @@
 import React from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+
+import '../style/Start.css';
 
 class Start extends React.Component {
+
+    handleLoad = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                    <div className='custom-ui'>
+                        <h1>Reload data?</h1>
+                        <p> This may discard any unsaved changes!</p>
+                        <div className='alert-container'>
+                            <button className="checkbox"
+                                onClick={() => {
+                                    this.props.loadData();
+                                    onClose();
+                                }}>
+                                Yes
+                    </button>
+                            <button className="checkbox" onClick={onClose}>Cancel</button>
+                        </div>
+                    </div>
+                );
+            }
+        });
+    }
+
     render() {
         return (
             <div className="start card text-center">
@@ -12,10 +39,10 @@ class Start extends React.Component {
                     </div>
                     <div className='bg-overlay'>
                         <div className="price">
-                            <h4>Setup your tracker</h4>
+                            <h4><i className="fas fa-cog" />Setup your tracker</h4>
                             <a className="external" target="_blank" rel="noopener noreferrer" href={"https://docs.google.com/spreadsheets/d/" + this.props.spreadSheetId + "/edit?usp=sharing"} data-toggle="tooltip" data-placement="right" title="Open in Google Sheets"><i className="fas fa-link"></i></a>
                         </div>
-                        <div className="load-data" onClick={this.props.loadData}><i className={"fas " + this.props.loading + " fa-sync-alt"} />Load Data</div>
+                        <div className="load-data" onClick={this.handleLoad}><i className={"fas " + this.props.loading + " fa-sync-alt"} />Load Data</div>
                         <div className="settings">
                             <div className="daySetting">
                                 <div className={"day " + (this.props.daySetting === 0 ? 'selected' : '')} onClick={() => this.props.changeDay(0)}>Mon</div>
@@ -29,7 +56,7 @@ class Start extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="next-page" onClick={()=>this.props.changePage(1)}>Continue<i className="fas fa-chevron-right" /></div>
+                        <div className="next-page" onClick={() => this.props.changePage(1)}>Continue<i className="fas fa-chevron-right" /></div>
                     </div>
                 </div>
             </div>
