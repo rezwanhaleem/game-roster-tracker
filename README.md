@@ -119,7 +119,7 @@ GOOGLE_OAUTH_CLIENT_ID=<---Google OAuth Client ID--->
 GOOGLE_OAUTH_CLIENT_SECRET=<---Google OAuth Client Secret--->
 GOOGLE_OAUTH_REDIRECT_URL=http://localhost:3000/
 GOOGLE_AUTHORIZED_ACCOUNTS=<---Email addresses that allow connection to your private Google Sheet--->
-GOOGLE_OPEN_SPREADSHEET_ID=<---Spreadsheet ID of pubic Google Sheet--->
+GOOGLE_OPEN_SPREADSHEET_ID=<---Spreadsheet ID of public Google Sheet--->
 GOOGLE_SPREADSHEET_ID=<---Spreadsheet ID of private Google Sheet--->
 
 ```
