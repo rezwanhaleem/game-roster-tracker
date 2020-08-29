@@ -6,6 +6,7 @@
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/rezwanhaleem/guild-war-tracker)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rezwanhaleem/guild-war-tracker)
 ![GitHub issues](https://img.shields.io/github/issues/rezwanhaleem/guild-war-tracker)
+
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/rezwanhaleem/guild-war-tracker)
 
 # Demo
