@@ -1,68 +1,145 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Guild War Tracker
 
-## Available Scripts
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+![Dependencies](https://img.shields.io/david/rezwanhaleem/guild-war-tracker)
+![GitHub repo size](https://img.shields.io/github/repo-size/rezwanhaleem/guild-war-tracker)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/rezwanhaleem/guild-war-tracker)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rezwanhaleem/guild-war-tracker)
+![GitHub issues](https://img.shields.io/github/issues/rezwanhaleem/guild-war-tracker)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/rezwanhaleem/guild-war-tracker)
 
-In the project directory, you can run:
+# Demo
 
-### `npm start`
+[Guild War Tracker](https://guild-war-tracker.herokuapp.com/) <- Demo hosted on [Heroku](https://www.heroku.com/)
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Please give the link above a few seconds to load the page. It is running on a free tier of Heroku.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+![Demo Image](https://i.imgur.com/2RbK3ND.png)
 
-### `npm test`
+## Description
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A personalized web app that updates player status on [Google Sheets](https://www.google.com/sheets/about/). This app relies on [React JS](https://reactjs.org/) as the front end and [Express JS](https://expressjs.com/) as the backend. It also utilizes [Google Sheets API](https://developers.google.com/sheets/api/) with the help of [google-spreadsheet](https://www.npmjs.com/package/google-spreadsheet) npm package.
 
-### `npm run build`
+# Usage
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Due to this being a personal web app, signing into Google only authorizes edits on a private Google Sheet.
+However, the app is able to modify a [public Google Sheet](https://docs.google.com/spreadsheets/d/1o6IVqf_DOEb-Y8JiiQIlXAWl9tPuKknbLAKP5HUZH4w/) allowing the app to be function with logging in.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Step 1 - Load Data
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Press the "Load Data" button to retrieve the player info from the public Google Sheet.
 
-### `npm run eject`
+![Step 1](https://i.imgur.com/Qo2Lssw.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Step 2 - Choose the day of the week to which changes will be made
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Press either Monday, Wednesday or Friday to make changes to the corresponding columns in the public Google Sheet
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Step 2](https://i.imgur.com/DyXHMjc.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Step 3 (Optional) - Auto Scroll Option
 
-## Learn More
+This option allows you to quickly make changes as it switches to the next player automatically when the status of a player is entered( Details in Step 4).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Step 3](https://i.imgur.com/P1WPOGD.png)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Step 4 - Make changes
 
-### Code Splitting
+After pressing the "Continue" button, you will be shown a page where you can enter status for each player one after the other. At the top their is a slidable progress bar with 3 cards below it denoting the possible player status selections.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+You can click, or press 1,2 or 3 on the keyboard to choose. This also works with the keys F, N and B.
 
-### Analyzing the Bundle Size
+Clicking the left or right arrow on the sides of the Card Carousel allows you to switch players as well.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+This can also be acheived by press the left and right arrow buttons on your keyboard.
 
-### Making a Progressive Web App
+![Step 4](https://i.imgur.com/5KaX8YO.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### Step 5 - Choose the days to upload
 
-### Advanced Configuration
+Once all the players have been enter, clicking the right arrow takes you to the upload page (This happens automatically if the Auto Scrool option is on).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+Now you can choose which day changes you want to upload to the Google Sheets.
 
-### Deployment
+![Step 5](https://i.imgur.com/NBYZdMj.png)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### Step 6 (Final Step) - upload
 
-### `npm run build` fails to minify
+Finally, you can upload your changes by clicking the "Upload" button. 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+After successful upload, the page will allow you to open the Google Sheet in another tab to confirm changes done.
+
+![Step 6](https://i.imgur.com/YvizxEF.png)
+
+
+# Contributions
+
+As this is a personal web app, contribution are welcome from any members of the Guild.
+
+## Prerequisites
+
+[Node >= v12.18.1](https://nodejs.org/en/)
+
+[npm >= v6.14.5](https://www.npmjs.com/)
+
+## Installation
+
+After cloning/downloading the repo, enter the project directory and run
+
+`yarn install` 
+
+or
+
+`npm install`
+
+
+### Testing only Front end
+
+To only test the React server run:
+
+`yarn up`
+
+or
+
+`npm up`
+
+### Testing Everything
+
+Before running the backend, environment variables need to be set. 
+Create a file named `.env` in the root directory and fill it with:
+
+```
+GOOGLE_CLIENT_ID=<---Google Service Account Client ID--->
+GOOGLE_CLIENT_EMAIL=<---Google Service Account Email--->
+GOOGLE_PRIVATE_KEY_ID=<---Google Service Account Key ID--->
+GOOGLE_PRIVATE_KEY=<---Google Service Account Private Key--->
+GOOGLE_CLIENT_CERT=<---Google Service Account Cert--->
+GOOGLE_OAUTH_CLIENT_ID=<---Google OAuth Client ID--->
+GOOGLE_OAUTH_CLIENT_SECRET=<---Google OAuth Client Secret--->
+GOOGLE_OAUTH_REDIRECT_URL=http://localhost:3000/
+GOOGLE_AUTHORIZED_ACCOUNTS=<---Email addresses that allow connection to your private Google Sheet--->
+GOOGLE_OPEN_SPREADSHEET_ID=<---Spreadsheet ID of pubic Google Sheet--->
+GOOGLE_SPREADSHEET_ID=<---Spreadsheet ID of private Google Sheet--->
+
+```
+All the environment variables above related to your Google Service Account can be found from the `credentials.json` file when you create the Service Account.
+
+Spreadsheet ID can found from the link of the Google Sheet:
+
+```
+    docs.google. com/spreadsheets/d/<---Spreadsheet ID--->/edit
+```
+
+
+Now to finally start & test both the backend (Express JS) and the front end React server run:
+
+`yarn dev`
+
+or
+
+`npm dev`
+
+
+# License
+
+This library is licensed under MIT. Full license text is available in [LICENSE](https://github.com/rezwanhaleem/guild-war-tracker/blob/develop/LICENSE.txt).
