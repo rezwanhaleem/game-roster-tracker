@@ -14,7 +14,7 @@
 
 Please give the link above a few seconds to load the page. It is running on a free tier of Heroku.
 
-![Demo Image](https://i.imgur.com/5q45WQ8.png)
+![Demo Image](https://i.imgur.com/2RbK3ND.png)
 
 ## Description
 
@@ -93,7 +93,7 @@ or
 `npm install`
 
 
-### Testing
+### Testing only Front end
 
 To only test the React server run:
 
@@ -103,7 +103,35 @@ or
 
 `npm up`
 
-To test both the backend (Express JS) and the front end React server run:
+### Testing Everything
+
+Before running the backend, environment variables need to be set. 
+Create a file named `.env` in the root directory and fill it with:
+
+```
+GOOGLE_CLIENT_ID=<---Google Service Account Client ID--->
+GOOGLE_CLIENT_EMAIL=<---Google Service Account Email--->
+GOOGLE_PRIVATE_KEY_ID=<---Google Service Account Key ID--->
+GOOGLE_PRIVATE_KEY=<---Google Service Account Private Key--->
+GOOGLE_CLIENT_CERT=<---Google Service Account Cert--->
+GOOGLE_OAUTH_CLIENT_ID=<---Google OAuth Client ID--->
+GOOGLE_OAUTH_CLIENT_SECRET=<---Google OAuth Client Secret--->
+GOOGLE_OAUTH_REDIRECT_URL=http://localhost:3000/
+GOOGLE_AUTHORIZED_ACCOUNTS=<---Email addresses that allow connection to your private Google Sheet--->
+GOOGLE_OPEN_SPREADSHEET_ID=<---Spreadsheet ID of pubic Google Sheet--->
+GOOGLE_SPREADSHEET_ID=<---Spreadsheet ID of private Google Sheet--->
+
+```
+All the environment variables above related to your Google Service Account can be found from the `credentials.json` file when you create the Service Account.
+
+Spreadsheet ID can found from the link of the Google Sheet:
+
+```
+    docs.google. com/spreadsheets/d/<---Spreadsheet ID--->/edit
+```
+
+
+Now to finally start & test both the backend (Express JS) and the front end React server run:
 
 `yarn dev`
 
