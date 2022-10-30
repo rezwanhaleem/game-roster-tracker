@@ -15,7 +15,7 @@
 
 Please give the link above a few seconds to load the page. It is running on a free tier of Heroku.
 
-![Demo Image](https://i.imgur.com/2RbK3ND.png)
+![Demo Image](https://imgur.com/Ub5uknO.png)
 
 ## Description
 
