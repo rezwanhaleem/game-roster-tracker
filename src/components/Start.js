@@ -30,7 +30,7 @@ class Start extends React.Component {
 
     render() {
         return (
-            <div className="start card text-center">
+            <div className="start card text-center" style={{backgroundImage:"url(/hero.png)"}}>
                 <div className="bg-container">
                     <div>
                         <svg viewBox="0 0 100 15">

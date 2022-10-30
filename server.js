@@ -23,7 +23,7 @@ const app = express();
 const fs = require('fs');
 const readline = require('readline');
 const { google } = require('googleapis');
-const request = require('request');
+// const request = require('request');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const spreadsheetId = process.env.GOOGLE_OPEN_SPREADSHEET_ID;
