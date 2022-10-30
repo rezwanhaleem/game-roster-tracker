@@ -126,7 +126,7 @@ class Nav extends React.Component {
         };
         return (
             <nav className="Nav navbar navbar-expand-lg navbar-mainbg">
-                <div className="navbar-brand navbar-logo" ><i className="fab fa-teamspeak"></i>Guild War Tracker</div>
+                <div className="navbar-brand navbar-logo" ><i className="fab fa-teamspeak"></i>Game Roster Tracker</div>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav ml-auto">
                         <div className="hori-selector" style={horri}><div className="left"></div><div className="right"></div></div>
