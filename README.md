@@ -1,17 +1,17 @@
-# Guild War Tracker
+# Game Roster Tracker
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-![Dependencies](https://img.shields.io/david/rezwanhaleem/guild-war-tracker)
-![GitHub repo size](https://img.shields.io/github/repo-size/rezwanhaleem/guild-war-tracker)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/rezwanhaleem/guild-war-tracker)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rezwanhaleem/guild-war-tracker)
-![GitHub issues](https://img.shields.io/github/issues/rezwanhaleem/guild-war-tracker)
+![Dependencies](https://img.shields.io/david/rezwanhaleem/game-roster-tracker)
+![GitHub repo size](https://img.shields.io/github/repo-size/rezwanhaleem/game-roster-tracker)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/rezwanhaleem/game-roster-tracker)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rezwanhaleem/game-roster-tracker)
+![GitHub issues](https://img.shields.io/github/issues/rezwanhaleem/game-roster-tracker)
 
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/rezwanhaleem/guild-war-tracker)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/rezwanhaleem/game-roster-tracker)
 
 # Demo
 
-[Guild War Tracker](https://guild-war-tracker.herokuapp.com/) <- Demo hosted on [Heroku](https://www.heroku.com/)
+[Game Roster Tracker](https://game-roster-tracker.herokuapp.com/) <- Demo hosted on [Heroku](https://www.heroku.com/)
 
 Please give the link above a few seconds to load the page. It is running on a free tier of Heroku.
 
@@ -75,7 +75,7 @@ After successful upload, the page will allow you to open the Google Sheet in ano
 
 # Contributions
 
-As this is a personal web app, contribution are welcome from any members of the Guild.
+As this is a personal web app, contribution are welcome from any members of the Roster.
 
 ## Prerequisites
 
@@ -143,4 +143,4 @@ or
 
 # License
 
-This library is licensed under MIT. Full license text is available in [LICENSE](https://github.com/rezwanhaleem/guild-war-tracker/blob/develop/LICENSE.txt).
+This library is licensed under MIT. Full license text is available in [LICENSE](https://github.com/rezwanhaleem/game-roster-tracker/blob/develop/LICENSE.txt).
